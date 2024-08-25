@@ -1,63 +1,77 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:realcolor/utilities/camera_widget.dart';
+import 'package:realcolor/utilities/countdown.dart';
 import 'package:realcolor/utilities/timer.dart';
 
-class Daily_Challenge_Page extends StatefulWidget {
-  const Daily_Challenge_Page({super.key});
+import '../utilities/challenge_helpers.dart';
 
+class Daily_Challenge_Page extends StatefulWidget {
+  const Daily_Challenge_Page({
+    super.key,
+    required this.camera,
+  });
+  final CameraDescription camera;
   @override
   State<Daily_Challenge_Page> createState() => _Daily_Challenge_PageState();
 }
 
 class _Daily_Challenge_PageState extends State<Daily_Challenge_Page> {
+  final countdownValue = ValueNotifier(0);
+  final todaysColor = getTodaysColor();
+
+  // yesterdays color was light purple
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.green,
-      child: SafeArea(
-          child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Stack(
-          children: [
-            Column(
-              children: [
-                Flexible(
-                  flex: 1,
-                  // random color
-                  child: Container(
-                    color: Colors.green,
-                    height: MediaQuery.sizeOf(context).height / 2,
+    return ChallengeCountdown(
+      countdownValue: countdownValue,
+      challengeWidget: Container(
+        color: todaysColor,
+        child: SafeArea(
+            child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Stack(
+            children: [
+              Column(
+                children: [
+                  Flexible(
+                    flex: 1,
+                    // random color
+                    child: Container(
+                      color: todaysColor,
+                      height: MediaQuery.sizeOf(context).height / 2,
+                    ),
                   ),
-                ),
-                Divider(
-                  height: 5,
-                  thickness: 5,
-                  color: Colors.black,
-                ),
-                Flexible(
-                  flex: 1,
-                  // camera
-                  child: Container(
-                    color: Colors.red,
-                    height: MediaQuery.sizeOf(context).height / 2,
+                  Divider(
+                    height: 5,
+                    thickness: 5,
+                    color: Colors.black,
                   ),
-                ),
-              ],
-            ),
-            GestureDetector(
-                onTap: () {
-                  showDialog<void>(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return resultDialog();
-                    },
-                  );
-                },
-                child: timerWidget(context, "1:00"))
-          ],
-        ),
-      )),
+                  Flexible(
+                      flex: 1,
+                      // camera
+                      child: ChallengeCameraScreen(
+                        camera: widget.camera,
+                      )),
+                ],
+              ),
+              GestureDetector(
+                  onTap: () {
+                    showDialog<void>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return resultDialog();
+                      },
+                    );
+                  },
+                  child: timerWidget(context, "1:00"))
+            ],
+          ),
+        )),
+      ),
     );
   }
 
@@ -138,7 +152,7 @@ class _Daily_Challenge_PageState extends State<Daily_Challenge_Page> {
               ),
             ),
             Text(
-              "\nDaily Challenge will reset at a random time tomorrow.",
+              "\nDaily Challenge will reset tomorrow.",
               style: TextStyle(
                 fontSize: 20,
               ),

@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
+import 'package:flutter/widgets.dart';
+
 class ChallengeCountdown extends StatefulWidget {
   ChallengeCountdown({
     super.key,
@@ -17,7 +19,7 @@ class ChallengeCountdown extends StatefulWidget {
   State<ChallengeCountdown> createState() => _ChallengeCountdownState();
 }
 
-class _ChallengeCountdownState extends State<ChallengeCountdown> {
+class _ChallengeCountdownState extends State<ChallengeCountdown> with TickerProviderStateMixin {
   final Future<String> _countdown = Future<String>.delayed(
     const Duration(seconds: 3),
     () => 'Countdown finished',
@@ -34,6 +36,7 @@ class _ChallengeCountdownState extends State<ChallengeCountdown> {
   void initState() {
     super.initState();
     // Start the countdown timer
+
     _countdownValue = _duration.inSeconds;
     startTimer();
   }
@@ -50,16 +53,22 @@ class _ChallengeCountdownState extends State<ChallengeCountdown> {
     return FutureBuilder(
         future: startTimer(),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          Widget child;
           if (snapshot.hasData) {
-            return widget.challengeWidget;
+            child = Container(
+              key: ValueKey(1), // assign key
+
+              child: widget.challengeWidget,
+            );
           } else {
-            return Container(
+            child = Container(
+              key: ValueKey(0), // assign key
               color: Colors.black,
               child: Align(
                 alignment: Alignment.center,
                 child: AnimatedOpacity(
                   opacity: _visible ? 1.0 : 0.0,
-                  duration: const Duration(milliseconds: 700),
+                  duration: const Duration(milliseconds: 1000),
                   child: RichText(
                     textAlign: TextAlign.center,
                     textScaler: MediaQuery.of(context).textScaler,
@@ -81,6 +90,10 @@ class _ChallengeCountdownState extends State<ChallengeCountdown> {
               ),
             );
           }
+          return AnimatedSwitcher(
+            duration: Duration(seconds: 1),
+            child: child,
+          );
         });
   }
 
