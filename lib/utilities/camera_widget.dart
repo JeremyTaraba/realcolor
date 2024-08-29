@@ -86,9 +86,17 @@ class ChallengeCameraScreenState extends State<ChallengeCameraScreen> {
           // Ensure that the camera is initialized.
           await _initializeControllerFuture;
 
+          await _controller.setFlashMode(FlashMode.off);
+
+          //Makes it much faster
+          await _controller.setFocusMode(FocusMode.locked);
+
           // Attempt to take a picture and then get the location
           // where the image file is saved.
           final image = await _controller.takePicture();
+
+          //Makes it much faster
+          await _controller.setFocusMode(FocusMode.locked);
 
           if (!context.mounted) return;
 
