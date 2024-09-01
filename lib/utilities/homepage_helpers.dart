@@ -68,25 +68,21 @@ Widget challengeButton(String text, context, alert) {
         child: Container(
           width: MediaQuery.of(context).size.width / 2,
           decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Colors.white,
-                  Colors.white,
-                  // Color.fromRGBO(255, 143, 158, 1),
-                  // Color.fromRGBO(255, 188, 143, 1),
-                ],
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
+              border: Border.all(
+                color: Colors.black,
+                width: 3,
+                strokeAlign: BorderSide.strokeAlignCenter,
               ),
+              color: Colors.white,
               borderRadius: const BorderRadius.all(
                 Radius.circular(25.0),
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.4),
-                  spreadRadius: 4,
-                  blurRadius: 10,
-                  offset: Offset(0, 2),
+                  color: Colors.black.withOpacity(0.2),
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                  offset: Offset(1, 2),
                 )
               ]),
           child: Center(

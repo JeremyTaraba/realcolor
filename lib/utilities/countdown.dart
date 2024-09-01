@@ -10,10 +10,14 @@ class ChallengeCountdown extends StatefulWidget {
     super.key,
     required this.countdownValue,
     required this.challengeWidget,
+    required this.showCountdown,
+    required this.countdownText,
   });
 
   final ValueListenable<int> countdownValue;
   final Widget challengeWidget;
+  final bool showCountdown;
+  final String countdownText;
 
   @override
   State<ChallengeCountdown> createState() => _ChallengeCountdownState();
@@ -78,9 +82,9 @@ class _ChallengeCountdownState extends State<ChallengeCountdown> with TickerProv
                         color: Colors.black,
                       ),
                       children: <TextSpan>[
-                        TextSpan(text: "Find the color\n", style: TextStyle(color: Colors.white, fontSize: 50)),
+                        TextSpan(text: widget.countdownText + "\n", style: TextStyle(color: Colors.white, fontSize: 50)),
                         TextSpan(
-                          text: _countdownValue.toString(),
+                          text: widget.showCountdown ? _countdownValue.toString() : "",
                           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 100, color: Colors.white),
                         ),
                       ],

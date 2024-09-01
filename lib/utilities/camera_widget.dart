@@ -2,6 +2,7 @@ import "dart:io";
 
 import "package:camera/camera.dart";
 import "package:flutter/material.dart";
+import "package:realcolor/utilities/color_detection.dart";
 
 // A screen that allows users to take a picture using a given camera.
 class ChallengeCameraScreen extends StatefulWidget {
@@ -29,7 +30,7 @@ class ChallengeCameraScreenState extends State<ChallengeCameraScreen> {
       // Get a specific camera from the list of available cameras.
       widget.camera,
       // Define the resolution to use.
-      ResolutionPreset.medium,
+      ResolutionPreset.low,
       // dont need audio
       enableAudio: false,
     );
@@ -66,6 +67,19 @@ class ChallengeCameraScreenState extends State<ChallengeCameraScreen> {
                   child: cameraButon(),
                 ),
               ),
+              Center(
+                child: Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Colors.red,
+                      width: 5,
+                    ),
+                  ),
+                ),
+              ),
             ],
           );
         } else {
@@ -93,7 +107,7 @@ class ChallengeCameraScreenState extends State<ChallengeCameraScreen> {
 
           // Attempt to take a picture and then get the location
           // where the image file is saved.
-          final image = await _controller.takePicture();
+          final xFile = await _controller.takePicture();
 
           //Makes it much faster
           await _controller.setFocusMode(FocusMode.locked);
@@ -106,7 +120,8 @@ class ChallengeCameraScreenState extends State<ChallengeCameraScreen> {
               builder: (context) => DisplayPictureScreen(
                 // Pass the automatically generated path to
                 // the DisplayPictureScreen widget.
-                imagePath: image.path,
+                imagePath: xFile.path,
+                xFile: xFile,
               ),
             ),
           );
@@ -115,40 +130,78 @@ class ChallengeCameraScreenState extends State<ChallengeCameraScreen> {
           print(e);
         }
       },
-      child: Container(
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(color: Colors.grey.withOpacity(0.5), width: 7),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 2,
-              blurRadius: 3,
-              offset: const Offset(0, 3), // changes position of shadow
-            ),
-          ],
-          color: const Color(0xFFC0BDBD),
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 18.0),
+        child: Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.grey.withOpacity(0.9), width: 7),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.9),
+                spreadRadius: 2,
+                blurRadius: 3,
+                offset: const Offset(0, 3), // changes position of shadow
+              ),
+            ],
+            color: const Color(0xFFC0BDBD),
+          ),
+          height: 70,
+          width: 70,
         ),
-        height: 80,
-        width: 80,
       ),
     );
   }
 }
 
 // A widget that displays the picture taken by the user.
-class DisplayPictureScreen extends StatelessWidget {
+class DisplayPictureScreen extends StatefulWidget {
   final String imagePath;
+  final XFile xFile;
 
-  const DisplayPictureScreen({super.key, required this.imagePath});
+  const DisplayPictureScreen({super.key, required this.imagePath, required this.xFile});
+
+  @override
+  State<DisplayPictureScreen> createState() => _DisplayPictureScreenState();
+}
+
+class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
+  Color c = Colors.white;
+  Future<void> setup() async {
+    c = await imageToRGB(widget.xFile);
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setup();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Display the Picture')),
+      appBar: AppBar(
+        title: Text("RGB: (${c.red}) (${c.green}) (${c.blue})"),
+        backgroundColor: c,
+      ),
       // The image is stored as a file on the device. Use the `Image.file`
       // constructor with the given path to display the image.
-      body: Image.file(File(imagePath)),
+      body: Stack(
+        children: [
+          Image.file(File(widget.imagePath)),
+          Center(
+            child: FloatingActionButton(
+              backgroundColor: Colors.white,
+              onPressed: () async {
+                await setup();
+              },
+              child: Text('press here'),
+            ),
+          )
+        ],
+      ),
     );
   }
 }

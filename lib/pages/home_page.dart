@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,15 +9,21 @@ import 'package:realcolor/pages/daily_challenge_page.dart';
 import 'package:realcolor/pages/unlimited_challenge_page.dart';
 import 'dart:math';
 import 'package:realcolor/utilities/background_gradients.dart' as background;
-import 'package:realcolor/utilities/camera_widget.dart';
+
 import 'dart:convert';
+
 import '../utilities/fancy_container.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:realcolor/utilities/homepage_helpers.dart';
-import 'package:permission_handler/permission_handler.dart';
+
+//TODO: work on adding awesome camera in since it is faster.
+//TODO: work on scoring algorithm and dialog box, use this for color scoring https://pub.dev/packages/delta_e
 
 //TODO: Add change camera access to the settings menu so they can enable it from there also
+//TODO: for the daily, only have 1 attempt for now, will add more in the future
+//TODO: for the unlimited, this will have a timer of 1 minute.
+//TODO: for the info button can add how the different modes work as well as how the color scoring works
 
 class Home_Page extends StatefulWidget {
   Home_Page({
@@ -41,6 +49,9 @@ class _Home_PageState extends State<Home_Page> {
     return "done";
   }
 
+  String appNamePath = "assets/images/realColor.png";
+  String appIconPath = "assets/images/realColorIcon.png";
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -63,14 +74,32 @@ class _Home_PageState extends State<Home_Page> {
                           flex: 4,
                           child: Container(
                             height: 1000,
-                            child: Text("Real Color [photoshop text]"),
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Stack(children: [
+                                Opacity(child: Image.asset(appNamePath, color: Colors.black), opacity: 0.5),
+                                ClipRect(child: BackdropFilter(filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 3.0), child: Image.asset(appNamePath)))
+                              ]),
+                            ),
                           ),
                         ),
                         Flexible(
                           flex: 6,
                           child: Container(
                             height: 1000,
-                            child: Text("[Logo goes here]"),
+                            child: Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: Stack(children: [
+                                Opacity(child: Image.asset(appIconPath, color: Colors.black), opacity: 0.5),
+                                ClipRect(child: BackdropFilter(filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 6.0), child: Image.asset(appIconPath)))
+                              ]),
+                            ),
+                          ),
+                        ),
+                        Flexible(
+                          flex: 1,
+                          child: Container(
+                            height: 1000,
                           ),
                         ),
                         challengeButton(
@@ -94,10 +123,9 @@ class _Home_PageState extends State<Home_Page> {
                           "Unlimited",
                           context,
                           unlimitedButtonDialog(
-                              context,
-                              ChallengeCameraScreen(
-                                camera: widget.camera,
-                              )),
+                            context,
+                            Unlimited_Challenge_Page(),
+                          ),
                         ),
                         Flexible(
                           flex: 2,
