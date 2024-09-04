@@ -6,6 +6,7 @@ import 'package:realcolor/utilities/camera_widget.dart';
 import 'package:realcolor/utilities/countdown.dart';
 import 'package:realcolor/utilities/timer.dart';
 
+import '../utilities/camera_widget2.dart';
 import '../utilities/challenge_helpers.dart';
 
 class Daily_Challenge_Page extends StatefulWidget {
@@ -79,11 +80,12 @@ class _Daily_Challenge_PageState extends State<Daily_Challenge_Page> {
                       color: Colors.black,
                     ),
                     Flexible(
-                        flex: 1,
-                        // camera
-                        child: ChallengeCameraScreen(
-                          camera: widget.camera,
-                        )),
+                      flex: 1,
+                      // camera
+                      child: ChallengeCameraScreen(
+                        camera: widget.camera,
+                      ),
+                    ),
                   ],
                 ),
                 GestureDetector(

@@ -9,6 +9,7 @@ import 'package:realcolor/pages/daily_challenge_page.dart';
 import 'package:realcolor/pages/unlimited_challenge_page.dart';
 import 'dart:math';
 import 'package:realcolor/utilities/background_gradients.dart' as background;
+import 'package:realcolor/utilities/camera_widget2.dart';
 
 import 'dart:convert';
 
@@ -17,13 +18,13 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:realcolor/utilities/homepage_helpers.dart';
 
-//TODO: work on adding awesome camera in since it is faster.
 //TODO: work on scoring algorithm and dialog box, use this for color scoring https://pub.dev/packages/delta_e
 
 //TODO: Add change camera access to the settings menu so they can enable it from there also
 //TODO: for the daily, only have 1 attempt for now, will add more in the future
 //TODO: for the unlimited, this will have a timer of 1 minute.
 //TODO: for the info button can add how the different modes work as well as how the color scoring works
+//TODO: work on adding awesome camera in since it is faster.
 
 class Home_Page extends StatefulWidget {
   Home_Page({
@@ -124,7 +125,7 @@ class _Home_PageState extends State<Home_Page> {
                           context,
                           unlimitedButtonDialog(
                             context,
-                            Unlimited_Challenge_Page(),
+                            CameraPage(),
                           ),
                         ),
                         Flexible(

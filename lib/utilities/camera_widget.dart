@@ -33,6 +33,7 @@ class ChallengeCameraScreenState extends State<ChallengeCameraScreen> {
       ResolutionPreset.low,
       // dont need audio
       enableAudio: false,
+      imageFormatGroup: ImageFormatGroup.jpeg,
     );
 
     // Next, initialize the controller. This returns a Future.
@@ -62,22 +63,20 @@ class ChallengeCameraScreenState extends State<ChallengeCameraScreen> {
               ),
               Align(
                 alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: cameraButon(),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.black45,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 5.0),
+                    child: cameraButon(),
+                  ),
                 ),
               ),
               Center(
-                child: Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.red,
-                      width: 5,
-                    ),
-                  ),
+                child: Icon(
+                  Icons.pages,
+                  size: 50,
+                  color: Colors.red,
                 ),
               ),
             ],
@@ -131,23 +130,15 @@ class ChallengeCameraScreenState extends State<ChallengeCameraScreen> {
         }
       },
       child: Padding(
-        padding: const EdgeInsets.only(bottom: 18.0),
+        padding: const EdgeInsets.only(bottom: 6.0),
         child: Container(
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(color: Colors.grey.withOpacity(0.9), width: 7),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.9),
-                spreadRadius: 2,
-                blurRadius: 3,
-                offset: const Offset(0, 3), // changes position of shadow
-              ),
-            ],
+            border: Border.all(color: Colors.grey.withOpacity(0.9), width: 6),
             color: const Color(0xFFC0BDBD),
           ),
-          height: 70,
-          width: 70,
+          height: 65,
+          width: 65,
         ),
       ),
     );
