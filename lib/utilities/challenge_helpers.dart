@@ -1,5 +1,7 @@
+import "dart:io";
 import 'dart:math';
 import "package:flutter/material.dart";
+import 'package:realcolor/utilities/color_detection.dart';
 
 dynamic getTodaysColor(List colorList) {
   final seed = _getTodaysSeed();
@@ -17,19 +19,22 @@ int _getTodaysSeed() {
   return seed;
 }
 
-Widget resultDialog(todaysColorData, BuildContext context) {
+Widget resultDialog(todaysColorData, BuildContext context, Color usersColor, String imagePath) {
   final List<dynamic> todaysColorRGB = todaysColorData["rgb"];
+  Color todaysColor = Color.fromRGBO(todaysColorRGB[0], todaysColorRGB[1], todaysColorRGB[2], 1);
   return AlertDialog.adaptive(
+    insetPadding: EdgeInsets.all(10),
     title: const Text(
       'Results',
       style: TextStyle(fontWeight: FontWeight.bold),
       textAlign: TextAlign.center,
     ),
     content: SingleChildScrollView(
+      padding: EdgeInsets.zero,
       child: ListBody(
         children: <Widget>[
           Container(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 3),
+            width: double.infinity,
             decoration: BoxDecoration(
               border: Border.all(color: Colors.blueAccent, width: 2),
               borderRadius: const BorderRadius.all(
@@ -37,6 +42,7 @@ Widget resultDialog(todaysColorData, BuildContext context) {
               ),
             ),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Text(
                   DateTime.now().toString().split(' ')[0],
@@ -51,7 +57,7 @@ Widget resultDialog(todaysColorData, BuildContext context) {
                 ),
                 Text(
                   "Today's color:",
-                  style: TextStyle(fontSize: 20),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
                 Text(
@@ -59,13 +65,10 @@ Widget resultDialog(todaysColorData, BuildContext context) {
                   style: TextStyle(fontSize: 20),
                   textAlign: TextAlign.center,
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    height: 30,
-                    width: 30,
-                    color: Color.fromRGBO(todaysColorRGB[0], todaysColorRGB[1], todaysColorRGB[2], 1),
-                  ),
+                Container(
+                  height: 30,
+                  width: 30,
+                  color: todaysColor,
                 ),
                 Text(
                   todaysColorData["hex"].toString().toUpperCase(),
@@ -78,28 +81,60 @@ Widget resultDialog(todaysColorData, BuildContext context) {
                     thickness: 2,
                   ),
                 ),
-                RichText(
+                Text(
+                  "Your Color",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
-                  textScaler: MediaQuery.of(context).textScaler,
-                  text: TextSpan(
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      color: Colors.black,
+                ),
+                Container(
+                  height: 200,
+                  width: 200,
+                  child: Image.file(
+                    File(imagePath),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Container(
+                    height: 30,
+                    width: 30,
+                    color: usersColor,
+                  ),
+                ),
+                Text(
+                  "#${usersColor.value.toRadixString(16).substring(2, 8).toUpperCase()}",
+                  style: TextStyle(fontSize: 20),
+                  textAlign: TextAlign.center,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 5.0),
+                  child: RichText(
+                    textAlign: TextAlign.center,
+                    textScaler: MediaQuery.of(context).textScaler,
+                    text: TextSpan(
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        color: Colors.black,
+                      ),
+                      children: <TextSpan>[
+                        TextSpan(text: "Score: "),
+                        TextSpan(
+                            text: (100 - getColorScore(usersColor, todaysColor).toInt()).toString(), style: TextStyle(fontWeight: FontWeight.bold)),
+                      ],
                     ),
-                    children: <TextSpan>[
-                      TextSpan(text: "Score "),
-                      TextSpan(text: "70%", style: TextStyle(fontWeight: FontWeight.bold)),
-                    ],
                   ),
                 ),
               ],
             ),
           ),
-          Text(
-            "\nCome back tomorrow to try again!",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 20,
+          Padding(
+            padding: const EdgeInsets.only(top: 5.0),
+            child: Text(
+              "Try again tomorrow!",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 20,
+              ),
             ),
           ),
         ],

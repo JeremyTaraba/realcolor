@@ -1,3 +1,4 @@
+import 'package:delta_e/delta_e.dart';
 import 'package:flutter/services.dart';
 import 'package:camera/camera.dart';
 import 'package:image/image.dart' as img;
@@ -39,10 +40,9 @@ Future<Color> imageToRGB(XFile xFile) async {
   return Color.fromARGB(mostCommon.a.toInt(), mostCommon.r.toInt(), mostCommon.g.toInt(), mostCommon.b.toInt());
 }
 
-// https://stackoverflow.com/questions/25168445/how-to-determine-if-a-color-is-close-to-another-color
-bool ColorsAreClose(Color first, Color second, {int threshold = 50}) {
-  num r = first.red - second.red;
-  int g = first.green - second.green;
-  int b = first.blue - second.blue;
-  return (r * r + g * g + b * b) <= threshold * threshold; // for other formulas check: https://en.wikipedia.org/wiki/Color_difference
+// https://pub.dev/packages/delta_e
+double getColorScore(Color first, Color second, {int threshold = 50}) {
+  LabColor lab1 = LabColor.fromRGB(first.red, first.green, first.blue);
+  LabColor lab2 = LabColor.fromRGB(second.red, second.green, second.blue);
+  return deltaE00(lab1, lab2);
 }

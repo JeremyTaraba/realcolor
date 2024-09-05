@@ -6,7 +6,6 @@ import 'package:realcolor/utilities/camera_widget.dart';
 import 'package:realcolor/utilities/countdown.dart';
 import 'package:realcolor/utilities/timer.dart';
 
-import '../utilities/camera_widget2.dart';
 import '../utilities/challenge_helpers.dart';
 
 class Daily_Challenge_Page extends StatefulWidget {
@@ -14,9 +13,11 @@ class Daily_Challenge_Page extends StatefulWidget {
     super.key,
     required this.camera,
     required this.colorList,
+    required this.dailyChallengeAttempt,
   });
   final CameraDescription camera;
   final List colorList;
+  final String dailyChallengeAttempt;
   @override
   State<Daily_Challenge_Page> createState() => _Daily_Challenge_PageState();
 }
@@ -52,6 +53,11 @@ class _Daily_Challenge_PageState extends State<Daily_Challenge_Page> {
   @override
   Widget build(BuildContext context) {
     final List<dynamic> todaysColorRGB = todaysColorData["rgb"];
+    DateTime beginningOfDay = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+    if (widget.dailyChallengeAttempt != "" && DateTime.parse(widget.dailyChallengeAttempt).isAfter(beginningOfDay)) {
+      // they already took a picture today
+      print("show dialog box");
+    }
 
     return ChallengeCountdown(
       showCountdown: false,
@@ -75,8 +81,8 @@ class _Daily_Challenge_PageState extends State<Daily_Challenge_Page> {
                       ),
                     ),
                     Divider(
-                      height: 5,
-                      thickness: 5,
+                      height: 10,
+                      thickness: 10,
                       color: Colors.black,
                     ),
                     Flexible(
@@ -84,20 +90,21 @@ class _Daily_Challenge_PageState extends State<Daily_Challenge_Page> {
                       // camera
                       child: ChallengeCameraScreen(
                         camera: widget.camera,
+                        todaysColorData: todaysColorData,
                       ),
                     ),
                   ],
                 ),
-                GestureDetector(
-                    onTap: () {
-                      showDialog<void>(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return resultDialog(todaysColorData, context);
-                        },
-                      );
-                    },
-                    child: timerWidget(context, _countdownValue.toString()))
+                // GestureDetector(
+                //     onTap: () {
+                //       showDialog<void>(
+                //         context: context,
+                //         builder: (BuildContext context) {
+                //           return resultDialog(todaysColorData, context, Colors.yellow);
+                //         },
+                //       );
+                //     },
+                //     child: timerWidget(context, _countdownValue.toString()),)
               ],
             ),
           ),
@@ -114,7 +121,8 @@ class _Daily_Challenge_PageState extends State<Daily_Challenge_Page> {
         showDialog<void>(
           context: context,
           builder: (BuildContext context) {
-            return resultDialog(todaysColorData, context);
+            return Placeholder();
+            // return resultDialog(todaysColorData, context, Colors.red);
           },
         );
         // Perform any desired action when the countdown is completed

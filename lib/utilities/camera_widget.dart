@@ -4,14 +4,18 @@ import "package:camera/camera.dart";
 import "package:flutter/material.dart";
 import "package:realcolor/utilities/color_detection.dart";
 
+import "challenge_helpers.dart";
+
 // A screen that allows users to take a picture using a given camera.
 class ChallengeCameraScreen extends StatefulWidget {
-  const ChallengeCameraScreen({
+  ChallengeCameraScreen({
     super.key,
     required this.camera,
+    required this.todaysColorData,
   });
 
   final CameraDescription camera;
+  final Map<String, dynamic> todaysColorData;
 
   @override
   ChallengeCameraScreenState createState() => ChallengeCameraScreenState();
@@ -68,7 +72,7 @@ class ChallengeCameraScreenState extends State<ChallengeCameraScreen> {
                   color: Colors.black45,
                   child: Padding(
                     padding: const EdgeInsets.only(top: 5.0),
-                    child: cameraButon(),
+                    child: cameraButon(widget.todaysColorData),
                   ),
                 ),
               ),
@@ -89,7 +93,7 @@ class ChallengeCameraScreenState extends State<ChallengeCameraScreen> {
     );
   }
 
-  Widget cameraButon() {
+  Widget cameraButon(todaysColorData) {
     return GestureDetector(
       // Provide an onPressed callback.
       onTap: () async {
@@ -112,17 +116,15 @@ class ChallengeCameraScreenState extends State<ChallengeCameraScreen> {
           await _controller.setFocusMode(FocusMode.locked);
 
           if (!context.mounted) return;
+          Color c = Colors.white;
+          c = await imageToRGB(xFile);
 
-          // If the picture was taken, display it on a new screen.
-          await Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => DisplayPictureScreen(
-                // Pass the automatically generated path to
-                // the DisplayPictureScreen widget.
-                imagePath: xFile.path,
-                xFile: xFile,
-              ),
-            ),
+          // If the picture was taken, open dialog box.
+          showDialog<void>(
+            context: context,
+            builder: (BuildContext context) {
+              return resultDialog(todaysColorData, context, c, xFile.path);
+            },
           );
         } catch (e) {
           // If an error occurs, log the error to the console.
