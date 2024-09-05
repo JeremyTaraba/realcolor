@@ -1,6 +1,7 @@
 import "package:app_settings/app_settings.dart";
 import "package:flutter/material.dart";
 import "package:permission_handler/permission_handler.dart";
+import "package:realcolor/utilities/constants.dart";
 
 Widget challengeButton(String text, context, alert) {
   return Flexible(
@@ -41,6 +42,7 @@ Widget challengeButton(String text, context, alert) {
               text,
               textAlign: TextAlign.left,
               style: TextStyle(
+                fontFamily: "PermanentMarker",
                 fontSize: 28,
                 letterSpacing: 0.0,
               ),
@@ -65,11 +67,11 @@ Widget dailyButton(text, context, nav) {
           width: MediaQuery.of(context).size.width / 2,
           decoration: BoxDecoration(
               border: Border.all(
-                color: Colors.black,
+                color: Colors.white,
                 width: 3,
                 strokeAlign: BorderSide.strokeAlignCenter,
               ),
-              color: Colors.white,
+              color: Colors.black,
               borderRadius: const BorderRadius.all(
                 Radius.circular(25.0),
               ),
@@ -84,9 +86,9 @@ Widget dailyButton(text, context, nav) {
           child: Center(
             child: Text(
               text,
-              textAlign: TextAlign.left,
               style: TextStyle(
-                fontSize: 28,
+                fontFamily: "Honk",
+                fontSize: 58,
                 letterSpacing: 0.0,
               ),
             ),
@@ -107,7 +109,7 @@ var snackBar = SnackBar(
       children: [
         Text(
           'Please allow camera access to play',
-          style: TextStyle(fontSize: 16),
+          style: kFontStyleSnackbarError,
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 8.0),
@@ -125,7 +127,7 @@ Widget unlimitedButtonDialog(context, nav) {
   return AlertDialog.adaptive(
     title: const Text(
       'Unlimited Challenge',
-      style: TextStyle(fontWeight: FontWeight.bold),
+      style: kFontStyleHeader1,
     ),
     content: const SingleChildScrollView(
       child: ListBody(
@@ -226,21 +228,21 @@ Drawer infoDrawer() {
             ),
             child: const Text(
               'How To Play',
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+              style: kFontStyleInfoHeader,
               textAlign: TextAlign.center,
             ),
           ),
         ),
         const Text(
           'Daily Challenge',
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+          style: kFontStyleInfoHeader,
           textAlign: TextAlign.center,
         ),
         const Padding(
           padding: EdgeInsets.all(8.0),
           child: Text(
             'In this mode, you are given the color of the day and have 1 attempt at taking a picture that is similar to this color. You will be given a score based on how close your picture is',
-            style: TextStyle(fontSize: 20),
+            style: kFontStyleInfoText,
             textAlign: TextAlign.left,
           ),
         ),
@@ -249,14 +251,14 @@ Drawer infoDrawer() {
         ),
         const Text(
           'Unlimited Challenge',
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+          style: kFontStyleInfoHeader,
           textAlign: TextAlign.center,
         ),
         const Padding(
           padding: EdgeInsets.all(8.0),
           child: Text(
             'This mode is a timed mode that you can play as many times as you want. You will be given a random color and you have 1 minute to take a picture similar to this color',
-            style: TextStyle(fontSize: 20),
+            style: kFontStyleInfoText,
             textAlign: TextAlign.left,
           ),
         ),
@@ -278,7 +280,7 @@ Drawer settingsDrawer() {
             ),
             child: Text(
               'Settings',
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+              style: kFontStyleInfoHeader,
               textAlign: TextAlign.center,
             ),
           ),
@@ -291,6 +293,7 @@ Drawer settingsDrawer() {
         Divider(
           height: 5,
           thickness: 10,
+          color: Colors.black,
         ),
         Text(
           "Color blind",
@@ -300,6 +303,7 @@ Drawer settingsDrawer() {
         Divider(
           height: 5,
           thickness: 10,
+          color: Colors.black,
         ),
         Text(
           "Camera Access",
