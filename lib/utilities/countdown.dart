@@ -73,21 +73,27 @@ class _ChallengeCountdownState extends State<ChallengeCountdown> with TickerProv
                 child: AnimatedOpacity(
                   opacity: _visible ? 1.0 : 0.0,
                   duration: const Duration(milliseconds: 1000),
-                  child: RichText(
-                    textAlign: TextAlign.center,
-                    textScaler: MediaQuery.of(context).textScaler,
-                    text: TextSpan(
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        color: Colors.black,
-                      ),
-                      children: <TextSpan>[
-                        TextSpan(text: widget.countdownText + "\n", style: TextStyle(color: Colors.white, fontSize: 50)),
-                        TextSpan(
-                          text: widget.showCountdown ? _countdownValue.toString() : "",
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 100, color: Colors.white),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: RichText(
+                      textAlign: TextAlign.center,
+                      textScaler: MediaQuery.of(context).textScaler,
+                      text: TextSpan(
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.black,
                         ),
-                      ],
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: widget.countdownText + "\n",
+                            style: TextStyle(color: Colors.white, fontSize: 50),
+                          ),
+                          TextSpan(
+                            text: widget.showCountdown ? _countdownValue.toString() : "",
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 100, color: Colors.white),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

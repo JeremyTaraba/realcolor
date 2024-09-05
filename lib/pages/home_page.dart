@@ -18,9 +18,12 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:realcolor/utilities/homepage_helpers.dart';
 
-//TODO: for the daily, only have 1 attempt for now, will add more in the future
-//TODO: for the unlimited, this will have a timer of 1 minute.
-//TODO: for the info button can add how the different modes work as well as how the color scoring works
+//TODO: Make the results screen wider. make sure the daily can only be played once
+//TODO: bug with going back on dialog after taking picture
+//TODO: timer needs to stop after taking picture in unlimited
+//TODO: if timer runs out without picture it causes an error
+//TODO: create custom score words like in Rhyth heaven: Perfect!!(100-91), Superb(90-81), Good(80-71), Okay..(70-61), Bad(60 <)
+
 //TODO: work on adding awesome camera in since it is faster.
 
 class Home_Page extends StatefulWidget {
@@ -38,7 +41,7 @@ class _Home_PageState extends State<Home_Page> {
   final random = Random();
   late List colorListFromJson;
   late SharedPreferences prefs;
-  late String dailyChallengeAttempTime;
+  late String dailyChallengeAttemptTime;
 
   List<List<Color>> randomColorArray = background.allBackgroundGradients;
 
@@ -48,9 +51,9 @@ class _Home_PageState extends State<Home_Page> {
     colorListFromJson = data;
     prefs = await SharedPreferences.getInstance();
     String? temp = prefs.getString('dailyAttemptTime');
-    dailyChallengeAttempTime = "";
+    dailyChallengeAttemptTime = "";
     if (temp != null) {
-      dailyChallengeAttempTime = temp;
+      dailyChallengeAttemptTime = temp;
     }
     return "done";
   }
@@ -111,17 +114,14 @@ class _Home_PageState extends State<Home_Page> {
                               height: 1000,
                             ),
                           ),
-                          challengeButton(
+                          dailyButton(
                             "Daily",
                             context,
-                            unlimitedButtonDialog(
-                                context,
-                                Daily_Challenge_Page(
-                                  camera: widget.camera,
-                                  colorList: colorListFromJson,
-                                  dailyChallengeAttempt: dailyChallengeAttempTime,
-                                ),
-                                widget.camera),
+                            Daily_Challenge_Page(
+                              camera: widget.camera,
+                              colorList: colorListFromJson,
+                              dailyChallengeAttempt: dailyChallengeAttemptTime,
+                            ),
                           ),
                           Flexible(
                             flex: 1,
@@ -134,8 +134,10 @@ class _Home_PageState extends State<Home_Page> {
                             context,
                             unlimitedButtonDialog(
                               context,
-                              Unlimited_Challenge_Page(),
-                              widget.camera,
+                              Unlimited_Challenge_Page(
+                                camera: widget.camera,
+                                colorList: colorListFromJson,
+                              ),
                             ),
                           ),
                           Flexible(

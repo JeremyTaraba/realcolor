@@ -3,6 +3,7 @@ import "dart:io";
 import "package:camera/camera.dart";
 import "package:flutter/material.dart";
 import "package:realcolor/utilities/color_detection.dart";
+import "package:shared_preferences/shared_preferences.dart";
 
 import "challenge_helpers.dart";
 
@@ -12,10 +13,12 @@ class ChallengeCameraScreen extends StatefulWidget {
     super.key,
     required this.camera,
     required this.todaysColorData,
+    required this.isDaily,
   });
 
   final CameraDescription camera;
   final Map<String, dynamic> todaysColorData;
+  final bool isDaily;
 
   @override
   ChallengeCameraScreenState createState() => ChallengeCameraScreenState();
@@ -72,7 +75,7 @@ class ChallengeCameraScreenState extends State<ChallengeCameraScreen> {
                   color: Colors.black45,
                   child: Padding(
                     padding: const EdgeInsets.only(top: 5.0),
-                    child: cameraButon(widget.todaysColorData),
+                    child: cameraButon(widget.todaysColorData, widget.isDaily),
                   ),
                 ),
               ),
@@ -93,7 +96,7 @@ class ChallengeCameraScreenState extends State<ChallengeCameraScreen> {
     );
   }
 
-  Widget cameraButon(todaysColorData) {
+  Widget cameraButon(todaysColorData, bool isDaily) {
     return GestureDetector(
       // Provide an onPressed callback.
       onTap: () async {
@@ -120,10 +123,12 @@ class ChallengeCameraScreenState extends State<ChallengeCameraScreen> {
           c = await imageToRGB(xFile);
 
           // If the picture was taken, open dialog box.
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString('dailyAttemptTime', DateTime.now().toString());
           showDialog<void>(
             context: context,
             builder: (BuildContext context) {
-              return resultDialog(todaysColorData, context, c, xFile.path);
+              return resultDialog(todaysColorData, context, c, xFile.path, isDaily);
             },
           );
         } catch (e) {
@@ -142,58 +147,6 @@ class ChallengeCameraScreenState extends State<ChallengeCameraScreen> {
           height: 65,
           width: 65,
         ),
-      ),
-    );
-  }
-}
-
-// A widget that displays the picture taken by the user.
-class DisplayPictureScreen extends StatefulWidget {
-  final String imagePath;
-  final XFile xFile;
-
-  const DisplayPictureScreen({super.key, required this.imagePath, required this.xFile});
-
-  @override
-  State<DisplayPictureScreen> createState() => _DisplayPictureScreenState();
-}
-
-class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
-  Color c = Colors.white;
-  Future<void> setup() async {
-    c = await imageToRGB(widget.xFile);
-    setState(() {});
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    setup();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("RGB: (${c.red}) (${c.green}) (${c.blue})"),
-        backgroundColor: c,
-      ),
-      // The image is stored as a file on the device. Use the `Image.file`
-      // constructor with the given path to display the image.
-      body: Stack(
-        children: [
-          Image.file(File(widget.imagePath)),
-          Center(
-            child: FloatingActionButton(
-              backgroundColor: Colors.white,
-              onPressed: () async {
-                await setup();
-              },
-              child: Text('press here'),
-            ),
-          )
-        ],
       ),
     );
   }

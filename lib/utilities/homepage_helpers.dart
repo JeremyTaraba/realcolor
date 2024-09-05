@@ -52,30 +52,76 @@ Widget challengeButton(String text, context, alert) {
   );
 }
 
-Widget unlimitedButtonDialog(context, nav, camera) {
-  var snackBar = SnackBar(
-    backgroundColor: Colors.red,
-    content: GestureDetector(
-      onTap: () {
-        AppSettings.openAppSettings(type: AppSettingsType.settings, asAnotherTask: true);
-      },
-      child: const Row(
-        children: [
-          Text(
-            'Please allow camera access to play',
-            style: TextStyle(fontSize: 16),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.0),
-            child: Icon(
-              Icons.settings,
+Widget dailyButton(text, context, nav) {
+  return Flexible(
+    flex: 2,
+    child: Padding(
+      padding: const EdgeInsets.symmetric(vertical: 15.0),
+      child: GestureDetector(
+        onTap: () async {
+          await checkCameraPermissionsPush(context, snackBar, nav);
+        },
+        child: Container(
+          width: MediaQuery.of(context).size.width / 2,
+          decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.black,
+                width: 3,
+                strokeAlign: BorderSide.strokeAlignCenter,
+              ),
               color: Colors.white,
+              borderRadius: const BorderRadius.all(
+                Radius.circular(25.0),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                  offset: Offset(1, 2),
+                )
+              ]),
+          child: Center(
+            child: Text(
+              text,
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                fontSize: 28,
+                letterSpacing: 0.0,
+              ),
             ),
-          )
-        ],
+          ),
+        ),
       ),
     ),
   );
+}
+
+var snackBar = SnackBar(
+  backgroundColor: Colors.red,
+  content: GestureDetector(
+    onTap: () {
+      AppSettings.openAppSettings(type: AppSettingsType.settings, asAnotherTask: true);
+    },
+    child: const Row(
+      children: [
+        Text(
+          'Please allow camera access to play',
+          style: TextStyle(fontSize: 16),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8.0),
+          child: Icon(
+            Icons.settings,
+            color: Colors.white,
+          ),
+        )
+      ],
+    ),
+  ),
+);
+
+Widget unlimitedButtonDialog(context, nav) {
   return AlertDialog.adaptive(
     title: const Text(
       'Unlimited Challenge',
@@ -112,7 +158,7 @@ Widget unlimitedButtonDialog(context, nav, camera) {
           style: TextStyle(color: Colors.green[800], fontWeight: FontWeight.bold, fontSize: 20),
         ),
         onPressed: () async {
-          await checkCameraPermissions(context, snackBar, nav);
+          await checkCameraPermissionsPushReplace(context, snackBar, nav);
         },
       ),
     ],
@@ -137,7 +183,22 @@ Future<bool> checkPermanentlyDenied() async {
   return await permission.status.isPermanentlyDenied;
 }
 
-Future<void> checkCameraPermissions(context, snackBar, nav) async {
+Future<void> checkCameraPermissionsPush(context, snackBar, nav) async {
+  if (await checkIfCameraAccepted()) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => nav));
+  } else {
+    if (await checkPermanentlyDenied()) {
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else {
+      await requestPermission();
+      if (await checkIfCameraAccepted()) {
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => nav));
+      }
+    }
+  }
+}
+
+Future<void> checkCameraPermissionsPushReplace(context, snackBar, nav) async {
   if (await checkIfCameraAccepted()) {
     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => nav));
   } else {

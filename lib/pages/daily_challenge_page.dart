@@ -1,10 +1,7 @@
-import 'dart:async';
-
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:realcolor/utilities/camera_widget.dart';
 import 'package:realcolor/utilities/countdown.dart';
-import 'package:realcolor/utilities/timer.dart';
 
 import '../utilities/challenge_helpers.dart';
 
@@ -23,30 +20,17 @@ class Daily_Challenge_Page extends StatefulWidget {
 }
 
 class _Daily_Challenge_PageState extends State<Daily_Challenge_Page> {
-  final Future<String> _countdown = Future<String>.delayed(
-    const Duration(seconds: 3),
-    () => 'Countdown finished',
-  );
   final countdownValue = ValueNotifier(0);
-
-  Duration _duration = const Duration(seconds: 62);
-
-  Timer? _timer;
-
-  late int _countdownValue;
   late var todaysColorData;
 
   @override
   void initState() {
     super.initState();
-    _countdownValue = _duration.inSeconds;
     todaysColorData = getTodaysColor(widget.colorList);
-    startTimer();
   }
 
   @override
   void dispose() {
-    _timer?.cancel();
     super.dispose();
   }
 
@@ -91,49 +75,16 @@ class _Daily_Challenge_PageState extends State<Daily_Challenge_Page> {
                       child: ChallengeCameraScreen(
                         camera: widget.camera,
                         todaysColorData: todaysColorData,
+                        isDaily: true,
                       ),
                     ),
                   ],
                 ),
-                // GestureDetector(
-                //     onTap: () {
-                //       showDialog<void>(
-                //         context: context,
-                //         builder: (BuildContext context) {
-                //           return resultDialog(todaysColorData, context, Colors.yellow);
-                //         },
-                //       );
-                //     },
-                //     child: timerWidget(context, _countdownValue.toString()),)
               ],
             ),
           ),
         ),
       ),
     );
-  }
-
-  Future<String> startTimer() async {
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_duration.inSeconds <= 0) {
-        // Countdown is finished
-        timer.cancel();
-        showDialog<void>(
-          context: context,
-          builder: (BuildContext context) {
-            return Placeholder();
-            // return resultDialog(todaysColorData, context, Colors.red);
-          },
-        );
-        // Perform any desired action when the countdown is completed
-      } else {
-        // Update the countdown value and decrement by 1 second
-        setState(() {
-          _countdownValue = _duration.inSeconds;
-          _duration = _duration - const Duration(seconds: 1);
-        });
-      }
-    });
-    return _countdown;
   }
 }

@@ -1,11 +1,18 @@
 import "dart:io";
 import 'dart:math';
 import "package:flutter/material.dart";
+import 'package:realcolor/pages/unlimited_challenge_page.dart';
 import 'package:realcolor/utilities/color_detection.dart';
 
 dynamic getTodaysColor(List colorList) {
   final seed = _getTodaysSeed();
   final random = Random(seed);
+  final randomIndex = random.nextInt(colorList.length);
+  return colorList[randomIndex];
+}
+
+dynamic getRandomColor(List colorList) {
+  final random = Random();
   final randomIndex = random.nextInt(colorList.length);
   return colorList[randomIndex];
 }
@@ -19,7 +26,7 @@ int _getTodaysSeed() {
   return seed;
 }
 
-Widget resultDialog(todaysColorData, BuildContext context, Color usersColor, String imagePath) {
+Widget resultDialog(todaysColorData, BuildContext context, Color usersColor, String imagePath, bool isDaily) {
   final List<dynamic> todaysColorRGB = todaysColorData["rgb"];
   Color todaysColor = Color.fromRGBO(todaysColorRGB[0], todaysColorRGB[1], todaysColorRGB[2], 1);
   return AlertDialog.adaptive(
@@ -45,7 +52,7 @@ Widget resultDialog(todaysColorData, BuildContext context, Color usersColor, Str
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Text(
-                  DateTime.now().toString().split(' ')[0],
+                  isDaily ? DateTime.now().toString().split(' ')[0] : "Unlimited",
                   style: TextStyle(fontSize: 20),
                   textAlign: TextAlign.center,
                 ),
@@ -56,7 +63,7 @@ Widget resultDialog(todaysColorData, BuildContext context, Color usersColor, Str
                   ),
                 ),
                 Text(
-                  "Today's color:",
+                  isDaily ? "Today's color:" : "Random color",
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
@@ -130,7 +137,7 @@ Widget resultDialog(todaysColorData, BuildContext context, Color usersColor, Str
           Padding(
             padding: const EdgeInsets.only(top: 5.0),
             child: Text(
-              "Try again tomorrow!",
+              isDaily ? "Try again tomorrow!" : "Try again?",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 20,
