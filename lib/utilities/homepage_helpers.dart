@@ -41,11 +41,7 @@ Widget challengeButton(String text, context, alert) {
             child: Text(
               text,
               textAlign: TextAlign.left,
-              style: TextStyle(
-                fontFamily: "PermanentMarker",
-                fontSize: 28,
-                letterSpacing: 0.0,
-              ),
+              style: kFontStyleUnlimited,
             ),
           ),
         ),
@@ -67,11 +63,11 @@ Widget dailyButton(text, context, nav) {
           width: MediaQuery.of(context).size.width / 2,
           decoration: BoxDecoration(
               border: Border.all(
-                color: Colors.white,
+                color: Colors.black,
                 width: 3,
                 strokeAlign: BorderSide.strokeAlignCenter,
               ),
-              color: Colors.black,
+              color: Colors.white,
               borderRadius: const BorderRadius.all(
                 Radius.circular(25.0),
               ),
@@ -86,11 +82,7 @@ Widget dailyButton(text, context, nav) {
           child: Center(
             child: Text(
               text,
-              style: TextStyle(
-                fontFamily: "Honk",
-                fontSize: 58,
-                letterSpacing: 0.0,
-              ),
+              style: kFontStyleDaily,
             ),
           ),
         ),
@@ -226,10 +218,12 @@ Drawer infoDrawer() {
             decoration: BoxDecoration(
               color: Colors.blue[100],
             ),
-            child: const Text(
-              'How To Play',
-              style: kFontStyleInfoHeader,
-              textAlign: TextAlign.center,
+            child: Center(
+              child: Text(
+                'How To Play',
+                style: kFontStyleInfoHeader,
+                textAlign: TextAlign.center,
+              ),
             ),
           ),
         ),
@@ -278,10 +272,12 @@ Drawer settingsDrawer() {
             decoration: BoxDecoration(
               color: Colors.red[200],
             ),
-            child: Text(
-              'Settings',
-              style: kFontStyleInfoHeader,
-              textAlign: TextAlign.center,
+            child: Center(
+              child: Text(
+                'Settings',
+                style: kFontStyleInfoHeader,
+                textAlign: TextAlign.center,
+              ),
             ),
           ),
         ),

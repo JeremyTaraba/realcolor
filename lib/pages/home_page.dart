@@ -18,20 +18,17 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:realcolor/utilities/homepage_helpers.dart';
 
-//TODO: Make the results screen wider. make sure the daily can only be played once
-//TODO: bug with going back on dialog after taking picture
+//TODO: make sure the daily can only be played once
 //TODO: timer needs to stop after taking picture in unlimited
 //TODO: if timer runs out without picture it causes an error
 //TODO: fix info so its better and make settings better or just remove it for now
 
 // do these ^ before releasing it tonight
 
-//TODO: create custom score words like in Rhyth heaven: Perfect!!(100-91), Superb(90-81), Good(80-71), Okay..(70-61), Bad(60 <)
-//TODO: update fonts
 //TODO: try different backgrounds on the home screen (could go for a zzz look on the home screen)
 //TODO: show the color after the countdown fully on the screen and then hero animation it to the top
 
-//TODO: work on adding awesome camera in since it is faster.
+//TODO: work on adding awesome camera package in since it is faster.
 
 class Home_Page extends StatefulWidget {
   Home_Page({

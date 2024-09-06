@@ -100,6 +100,12 @@ flutter:
     - family: PermanentMarker
       fonts:
         - asset: fonts/PermanentMarker-Regular.ttf
+    - family: Caveat
+      fonts:
+        - asset: fonts/Caveat-VariableFont.ttf
+    - family: Gluten
+      fonts:
+        - asset: fonts/Gluten-VariableFont.ttf
   #
   #
   # For details regarding fonts from package dependencies,

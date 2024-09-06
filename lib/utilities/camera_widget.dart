@@ -1,5 +1,3 @@
-import "dart:io";
-
 import "package:camera/camera.dart";
 import "package:flutter/material.dart";
 import "package:realcolor/utilities/color_detection.dart";
@@ -127,6 +125,7 @@ class ChallengeCameraScreenState extends State<ChallengeCameraScreen> {
           await prefs.setString('dailyAttemptTime', DateTime.now().toString());
           showDialog<void>(
             context: context,
+            barrierDismissible: false,
             builder: (BuildContext context) {
               return resultDialog(todaysColorData, context, c, xFile.path, isDaily);
             },
