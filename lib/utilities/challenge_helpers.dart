@@ -27,10 +27,13 @@ int _getTodaysSeed() {
   return seed;
 }
 
-Widget resultDialog(todaysColorData, BuildContext context, Color usersColor, String imagePath, bool isDaily) {
+Widget resultDialog(todaysColorData, BuildContext context, Color usersColor, String imagePath, bool isDaily, {bool secondAttempt = false}) {
   final List<dynamic> todaysColorRGB = todaysColorData["rgb"];
   Color todaysColor = Color.fromRGBO(todaysColorRGB[0], todaysColorRGB[1], todaysColorRGB[2], 1);
   int score = (100 - getColorScore(usersColor, todaysColor).toInt());
+  if (imagePath == "") {
+    score = 0;
+  }
   return AlertDialog.adaptive(
     surfaceTintColor: Colors.transparent,
     backgroundColor: Colors.transparent,
@@ -109,9 +112,13 @@ Widget resultDialog(todaysColorData, BuildContext context, Color usersColor, Str
                     Container(
                       height: 250,
                       width: 250,
-                      child: Image.file(
-                        File(imagePath),
-                      ),
+                      child: imagePath != ""
+                          ? Image.file(
+                              File(imagePath),
+                            )
+                          : Container(
+                              color: Colors.white,
+                            ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0),
@@ -176,9 +183,13 @@ Widget resultDialog(todaysColorData, BuildContext context, Color usersColor, Str
           style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 20),
         ),
         onPressed: () {
-          Navigator.of(context)
-            ..pop()
-            ..pop();
+          if (secondAttempt) {
+            Navigator.of(context).pop();
+          } else {
+            Navigator.of(context)
+              ..pop()
+              ..pop();
+          }
         },
       ),
     ],

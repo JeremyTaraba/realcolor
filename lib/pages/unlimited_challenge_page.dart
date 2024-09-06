@@ -85,6 +85,7 @@ class _Unlimited_Challenge_PageState extends State<Unlimited_Challenge_Page> {
                         camera: widget.camera,
                         todaysColorData: randomColorData,
                         isDaily: false,
+                        timer: _timer,
                       ),
                     ),
                   ],
@@ -106,7 +107,7 @@ class _Unlimited_Challenge_PageState extends State<Unlimited_Challenge_Page> {
         showDialog<void>(
           context: context,
           builder: (BuildContext context) {
-            return resultDialog(randomColorData, context, Colors.transparent, "", false);
+            return resultDialog(randomColorData, context, Colors.white, "", false);
           },
         );
         // Perform any desired action when the countdown is completed

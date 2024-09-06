@@ -86,7 +86,7 @@ class _ChallengeCountdownState extends State<ChallengeCountdown> with TickerProv
                         children: <TextSpan>[
                           TextSpan(
                             text: widget.countdownText + "\n",
-                            style: TextStyle(color: Colors.white, fontSize: 50),
+                            style: TextStyle(color: Colors.white, fontSize: 60, fontFamily: "Caveat", fontWeight: FontWeight.bold),
                           ),
                           TextSpan(
                             text: widget.showCountdown ? _countdownValue.toString() : "",

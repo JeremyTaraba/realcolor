@@ -2,6 +2,9 @@ import "package:app_settings/app_settings.dart";
 import "package:flutter/material.dart";
 import "package:permission_handler/permission_handler.dart";
 import "package:realcolor/utilities/constants.dart";
+import "package:shared_preferences/shared_preferences.dart";
+
+import "../pages/daily_challenge_page.dart";
 
 Widget challengeButton(String text, context, alert) {
   return Flexible(
@@ -50,14 +53,33 @@ Widget challengeButton(String text, context, alert) {
   );
 }
 
-Widget dailyButton(text, context, nav) {
+Future<String> getDailyChallengeTime() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? temp = prefs.getString('dailyAttemptTime');
+  String dailyChallengeAttemptTime = "";
+  if (temp != null) {
+    dailyChallengeAttemptTime = temp;
+  }
+  return dailyChallengeAttemptTime;
+}
+
+Widget dailyButton(text, context, camera, colorListFromJson) {
   return Flexible(
     flex: 2,
     child: Padding(
       padding: const EdgeInsets.symmetric(vertical: 15.0),
       child: GestureDetector(
         onTap: () async {
-          await checkCameraPermissionsPush(context, snackBar, nav);
+          String dailyChallengeTime = await getDailyChallengeTime();
+          await checkCameraPermissionsPush(
+            context,
+            snackBar,
+            Daily_Challenge_Page(
+              camera: camera,
+              colorList: colorListFromJson,
+              dailyChallengeAttempt: dailyChallengeTime,
+            ),
+          );
         },
         child: Container(
           width: MediaQuery.of(context).size.width / 2,
@@ -235,7 +257,7 @@ Drawer infoDrawer() {
         const Padding(
           padding: EdgeInsets.all(8.0),
           child: Text(
-            'In this mode, you are given the color of the day and have 1 attempt at taking a picture that is similar to this color. You will be given a score based on how close your picture is',
+            "Find and photograph something that embodies today's color. The closer your match, the higher your score. Everyone gets the same color each day, so you can challenge your friends and see who gets the highest score!",
             style: kFontStyleInfoText,
             textAlign: TextAlign.left,
           ),
@@ -251,7 +273,7 @@ Drawer infoDrawer() {
         const Padding(
           padding: EdgeInsets.all(8.0),
           child: Text(
-            'This mode is a timed mode that you can play as many times as you want. You will be given a random color and you have 1 minute to take a picture similar to this color',
+            'Test your speed and precision! You’ll get a random color and just 60 seconds to snap a photo that matches it as closely as possible. Play as many times as you like and race against the clock to find your perfect shot!',
             style: kFontStyleInfoText,
             textAlign: TextAlign.left,
           ),

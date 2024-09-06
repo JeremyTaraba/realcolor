@@ -1,3 +1,5 @@
+import "dart:async";
+
 import "package:camera/camera.dart";
 import "package:flutter/material.dart";
 import "package:realcolor/utilities/color_detection.dart";
@@ -9,6 +11,7 @@ import "challenge_helpers.dart";
 class ChallengeCameraScreen extends StatefulWidget {
   ChallengeCameraScreen({
     super.key,
+    this.timer,
     required this.camera,
     required this.todaysColorData,
     required this.isDaily,
@@ -17,7 +20,7 @@ class ChallengeCameraScreen extends StatefulWidget {
   final CameraDescription camera;
   final Map<String, dynamic> todaysColorData;
   final bool isDaily;
-
+  final Timer? timer;
   @override
   ChallengeCameraScreenState createState() => ChallengeCameraScreenState();
 }
@@ -73,7 +76,7 @@ class ChallengeCameraScreenState extends State<ChallengeCameraScreen> {
                   color: Colors.black45,
                   child: Padding(
                     padding: const EdgeInsets.only(top: 5.0),
-                    child: cameraButon(widget.todaysColorData, widget.isDaily),
+                    child: cameraButon(widget.todaysColorData, widget.isDaily, timer: widget.timer),
                   ),
                 ),
               ),
@@ -94,7 +97,7 @@ class ChallengeCameraScreenState extends State<ChallengeCameraScreen> {
     );
   }
 
-  Widget cameraButon(todaysColorData, bool isDaily) {
+  Widget cameraButon(todaysColorData, bool isDaily, {Timer? timer}) {
     return GestureDetector(
       // Provide an onPressed callback.
       onTap: () async {
@@ -120,12 +123,22 @@ class ChallengeCameraScreenState extends State<ChallengeCameraScreen> {
           Color c = Colors.white;
           c = await imageToRGB(xFile);
 
+          // set daily sharedPreferences
+          if (isDaily) {
+            print("setting daily sharedprefs");
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            await prefs.setString('dailyAttemptTime', DateTime.now().toString());
+            await prefs.setString('savedDailyImgPath', xFile.path);
+            await prefs.setStringList('savedDailyColorRGB', <String>[c.red.toString(), c.green.toString(), c.blue.toString()]);
+          }
+          if (timer != null) {
+            timer.cancel();
+          }
+
           // If the picture was taken, open dialog box.
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setString('dailyAttemptTime', DateTime.now().toString());
           showDialog<void>(
             context: context,
-            barrierDismissible: false,
+            barrierDismissible: true,
             builder: (BuildContext context) {
               return resultDialog(todaysColorData, context, c, xFile.path, isDaily);
             },

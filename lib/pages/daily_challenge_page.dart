@@ -2,6 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:realcolor/utilities/camera_widget.dart';
 import 'package:realcolor/utilities/countdown.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utilities/challenge_helpers.dart';
 
@@ -40,7 +41,25 @@ class _Daily_Challenge_PageState extends State<Daily_Challenge_Page> {
     DateTime beginningOfDay = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
     if (widget.dailyChallengeAttempt != "" && DateTime.parse(widget.dailyChallengeAttempt).isAfter(beginningOfDay)) {
       // they already took a picture today
-      print("show dialog box");
+
+      return Scaffold(
+        body: FutureBuilder(
+          future: getPreviousAttempt(), // get info from sharedprefs and show results
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Scaffold(
+                backgroundColor: Colors.black,
+                body: resultDialog(todaysColorData, context, snapshot.data?[0], snapshot.data?[1], true, secondAttempt: true),
+              );
+            }
+            return Container(
+              height: double.infinity,
+              width: double.infinity,
+              color: Colors.black,
+            );
+          },
+        ),
+      );
     }
 
     return ChallengeCountdown(
@@ -86,5 +105,23 @@ class _Daily_Challenge_PageState extends State<Daily_Challenge_Page> {
         ),
       ),
     );
+  }
+
+  Future<List<dynamic>> getPreviousAttempt() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<dynamic> prevColorAndPath = [];
+    Color prevColor = Colors.white;
+    String prevImgPath = ""; // should set this to a default img
+    final List<String>? tempColor = prefs.getStringList('savedDailyColorRGB');
+    if (tempColor != null) {
+      prevColor = Color.fromRGBO(int.parse(tempColor[0]), int.parse(tempColor[1]), int.parse(tempColor[2]), 1);
+    }
+    String? tempString = prefs.getString('savedDailyImgPath');
+    if (tempString != null) {
+      prevImgPath = tempString;
+    }
+    prevColorAndPath.add(prevColor);
+    prevColorAndPath.add(prevImgPath);
+    return prevColorAndPath;
   }
 }

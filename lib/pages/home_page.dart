@@ -18,17 +18,11 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:realcolor/utilities/homepage_helpers.dart';
 
-//TODO: make sure the daily can only be played once
-//TODO: timer needs to stop after taking picture in unlimited
-//TODO: if timer runs out without picture it causes an error
-//TODO: fix info so its better and make settings better or just remove it for now
-
-// do these ^ before releasing it tonight
-
 //TODO: try different backgrounds on the home screen (could go for a zzz look on the home screen)
 //TODO: show the color after the countdown fully on the screen and then hero animation it to the top
 
 //TODO: work on adding awesome camera package in since it is faster.
+//TODO: after adding awesome camera, see if can make the cross hair change color according to what it sees
 
 class Home_Page extends StatefulWidget {
   Home_Page({
@@ -44,7 +38,6 @@ class Home_Page extends StatefulWidget {
 class _Home_PageState extends State<Home_Page> {
   final random = Random();
   late List colorListFromJson;
-  late SharedPreferences prefs;
   late String dailyChallengeAttemptTime;
 
   List<List<Color>> randomColorArray = background.allBackgroundGradients;
@@ -53,12 +46,7 @@ class _Home_PageState extends State<Home_Page> {
     final String response = await rootBundle.loadString('assets/colors.json');
     final data = await json.decode(response);
     colorListFromJson = data;
-    prefs = await SharedPreferences.getInstance();
-    String? temp = prefs.getString('dailyAttemptTime');
-    dailyChallengeAttemptTime = "";
-    if (temp != null) {
-      dailyChallengeAttemptTime = temp;
-    }
+    dailyChallengeAttemptTime = await getDailyChallengeTime();
     return "done";
   }
 
@@ -121,11 +109,8 @@ class _Home_PageState extends State<Home_Page> {
                           dailyButton(
                             "Daily",
                             context,
-                            Daily_Challenge_Page(
-                              camera: widget.camera,
-                              colorList: colorListFromJson,
-                              dailyChallengeAttempt: dailyChallengeAttemptTime,
-                            ),
+                            widget.camera,
+                            colorListFromJson,
                           ),
                           Flexible(
                             flex: 1,
@@ -153,18 +138,20 @@ class _Home_PageState extends State<Home_Page> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
+                                    // info button
                                     GestureDetector(
                                       child: infoAndSettings(Icons.info),
                                       onTap: () {
                                         Scaffold.of(context).openDrawer();
                                       },
                                     ),
-                                    GestureDetector(
-                                      child: infoAndSettings(Icons.settings),
-                                      onTap: () {
-                                        Scaffold.of(context).openEndDrawer();
-                                      },
-                                    ),
+                                    // settings button
+                                    // GestureDetector(
+                                    //   child: infoAndSettings(Icons.settings),
+                                    //   onTap: () {
+                                    //     Scaffold.of(context).openEndDrawer();
+                                    //   },
+                                    // ),
                                   ],
                                 ),
                               ),
