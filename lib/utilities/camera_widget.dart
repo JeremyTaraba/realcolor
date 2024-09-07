@@ -138,7 +138,7 @@ class ChallengeCameraScreenState extends State<ChallengeCameraScreen> {
           // If the picture was taken, open dialog box.
           showDialog<void>(
             context: context,
-            barrierDismissible: true,
+            barrierDismissible: false,
             builder: (BuildContext context) {
               return resultDialog(todaysColorData, context, c, xFile.path, isDaily);
             },

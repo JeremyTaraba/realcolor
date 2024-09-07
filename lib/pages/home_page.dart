@@ -1,15 +1,11 @@
 import 'dart:ui';
 
 import 'package:camera/camera.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
-import 'package:realcolor/pages/daily_challenge_page.dart';
 import 'package:realcolor/pages/unlimited_challenge_page.dart';
 import 'dart:math';
 import 'package:realcolor/utilities/background_gradients.dart' as background;
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'dart:convert';
 
@@ -18,11 +14,15 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:realcolor/utilities/homepage_helpers.dart';
 
-//TODO: try different backgrounds on the home screen (could go for a zzz look on the home screen)
+//TODO: add revenue cat for the unlimited mode $4.99 and make promo-code for 7 day free access
 //TODO: show the color after the countdown fully on the screen and then hero animation it to the top
-
+//TODO: make pop up for unlimited look like popup on figma
+//TODO: center the back button on the results dialog and make it have a red bg
 //TODO: work on adding awesome camera package in since it is faster.
 //TODO: after adding awesome camera, see if can make the cross hair change color according to what it sees
+
+//TODO: cancel camera after taking the picture since u can only take 1
+//TODO: try different backgrounds on the home screen (could go for a zzz look on the home screen)
 
 class Home_Page extends StatefulWidget {
   Home_Page({
