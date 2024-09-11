@@ -15,13 +15,12 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:realcolor/utilities/homepage_helpers.dart';
 
-//TODO: add revenue cat for the unlimited mode $4.99 and make promo-code for 7 day free access
 //TODO: show the color after the countdown fully on the screen and then hero animation it to the top
-//TODO: make pop up for unlimited look like popup on figma
+//TODO: make popup buttons for unlimited look like popup on figma
 //TODO: center the back button on the results dialog and make it have a red bg
 //TODO: work on adding awesome camera package in since it is faster.
 //TODO: after adding awesome camera, see if can make the cross hair change color according to what it sees
-
+//TODO: add a history to show results for past days
 //TODO: cancel camera after taking the picture since u can only take 1
 //TODO: try different backgrounds on the home screen (could go for a zzz look on the home screen)
 
@@ -41,6 +40,7 @@ class _Home_PageState extends State<Home_Page> {
   late List colorListFromJson;
   late String dailyChallengeAttemptTime;
   bool _isPro = false;
+  TextEditingController promoCode = TextEditingController();
 
   List<List<Color>> randomColorArray = background.allBackgroundGradients;
 
@@ -154,12 +154,12 @@ class _Home_PageState extends State<Home_Page> {
                                       },
                                     ),
                                     // settings button
-                                    // GestureDetector(
-                                    //   child: infoAndSettings(Icons.settings),
-                                    //   onTap: () {
-                                    //     Scaffold.of(context).openEndDrawer();
-                                    //   },
-                                    // ),
+                                    GestureDetector(
+                                      child: infoAndSettings(Icons.settings),
+                                      onTap: () {
+                                        Scaffold.of(context).openEndDrawer();
+                                      },
+                                    ),
                                   ],
                                 ),
                               ),
