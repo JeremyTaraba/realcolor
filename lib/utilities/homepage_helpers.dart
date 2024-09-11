@@ -1,6 +1,8 @@
 import "package:app_settings/app_settings.dart";
 import "package:flutter/material.dart";
 import "package:permission_handler/permission_handler.dart";
+import "package:purchases_flutter/purchases_flutter.dart";
+import "package:purchases_ui_flutter/purchases_ui_flutter.dart";
 import "package:realcolor/utilities/constants.dart";
 import "package:shared_preferences/shared_preferences.dart";
 
@@ -140,7 +142,7 @@ var snackBar = SnackBar(
 Widget unlimitedButtonDialog(context, nav) {
   return AlertDialog.adaptive(
     title: const Text(
-      'Unlimited Challenge',
+      'Unlimited',
       style: kFontStyleHeader1,
     ),
     content: const SingleChildScrollView(
@@ -174,7 +176,14 @@ Widget unlimitedButtonDialog(context, nav) {
           style: TextStyle(color: Colors.green[800], fontWeight: FontWeight.bold, fontSize: 20),
         ),
         onPressed: () async {
-          await checkCameraPermissionsPushReplace(context, snackBar, nav);
+          CustomerInfo customerInfo = await Purchases.getCustomerInfo();
+          EntitlementInfo? entitlement = customerInfo.entitlements.all['pro'];
+          if (entitlement != null && entitlement.isActive) {
+            await checkCameraPermissionsPushReplace(context, snackBar, nav);
+          } else {
+            final paywallResult = await RevenueCatUI.presentPaywallIfNeeded("default");
+            print('paywall result: $paywallResult');
+          }
         },
       ),
     ],
@@ -250,7 +259,7 @@ Drawer infoDrawer() {
           ),
         ),
         const Text(
-          'Daily Challenge',
+          'Daily',
           style: kFontStyleInfoHeader,
           textAlign: TextAlign.center,
         ),
@@ -266,7 +275,7 @@ Drawer infoDrawer() {
           height: 50,
         ),
         const Text(
-          'Unlimited Challenge',
+          'Unlimited',
           style: kFontStyleInfoHeader,
           textAlign: TextAlign.center,
         ),

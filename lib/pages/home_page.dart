@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:realcolor/pages/unlimited_challenge_page.dart';
 import 'dart:math';
 import 'package:realcolor/utilities/background_gradients.dart' as background;
@@ -39,14 +40,16 @@ class _Home_PageState extends State<Home_Page> {
   final random = Random();
   late List colorListFromJson;
   late String dailyChallengeAttemptTime;
+  bool _isPro = false;
 
   List<List<Color>> randomColorArray = background.allBackgroundGradients;
 
-  Future<String> readJson() async {
+  Future<String> readJsonAndCheckProStatus() async {
     final String response = await rootBundle.loadString('assets/colors.json');
     final data = await json.decode(response);
     colorListFromJson = data;
     dailyChallengeAttemptTime = await getDailyChallengeTime();
+    // await setupIsPro();
     return "done";
   }
 
@@ -54,9 +57,14 @@ class _Home_PageState extends State<Home_Page> {
   String appIconPath = "assets/images/realColorIcon.png";
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: readJson(),
+        future: readJsonAndCheckProStatus(),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           if (snapshot.hasData) {
             return Stack(
@@ -77,7 +85,7 @@ class _Home_PageState extends State<Home_Page> {
                           Flexible(
                             flex: 4,
                             child: Container(
-                              height: 1000,
+                              height: double.infinity,
                               child: Padding(
                                 padding: const EdgeInsets.all(4.0),
                                 child: Stack(children: [
@@ -90,7 +98,7 @@ class _Home_PageState extends State<Home_Page> {
                           Flexible(
                             flex: 6,
                             child: Container(
-                              height: 1000,
+                              height: double.infinity,
                               child: Padding(
                                 padding: const EdgeInsets.all(15.0),
                                 child: Stack(children: [
@@ -103,7 +111,7 @@ class _Home_PageState extends State<Home_Page> {
                           Flexible(
                             flex: 1,
                             child: Container(
-                              height: 1000,
+                              height: double.infinity,
                             ),
                           ),
                           dailyButton(
@@ -115,7 +123,7 @@ class _Home_PageState extends State<Home_Page> {
                           Flexible(
                             flex: 1,
                             child: Container(
-                              height: 1000,
+                              height: double.infinity,
                             ),
                           ),
                           challengeButton(
@@ -211,6 +219,15 @@ class _Home_PageState extends State<Home_Page> {
     } else {
       return const Drawer();
     }
+  }
+
+  Future<void> setupIsPro() async {
+    Purchases.addCustomerInfoUpdateListener((customerInfo) async {
+      EntitlementInfo? entitlement = customerInfo.entitlements.all["pro"];
+      setState(() {
+        _isPro = entitlement?.isActive ?? false;
+      });
+    });
   }
 
   Widget infoAndSettings(icon) {
