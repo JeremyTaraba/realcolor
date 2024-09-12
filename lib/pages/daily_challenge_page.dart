@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:realcolor/utilities/camera_widget.dart';
@@ -22,12 +24,18 @@ class Daily_Challenge_Page extends StatefulWidget {
 
 class _Daily_Challenge_PageState extends State<Daily_Challenge_Page> {
   final countdownValue = ValueNotifier(0);
-  late var todaysColorData;
+  late int _countdownValue; // flutter says this isn't used for some reason
+  late Duration _duration = const Duration(seconds: 3);
+  late Map<String, dynamic> todaysColorData;
+  Timer? _timer;
+  double _animatedHeight = 2000;
 
   @override
   void initState() {
     super.initState();
+    _countdownValue = _duration.inSeconds;
     todaysColorData = getTodaysColor(widget.colorList);
+    _startTimer();
   }
 
   @override
@@ -38,6 +46,7 @@ class _Daily_Challenge_PageState extends State<Daily_Challenge_Page> {
   @override
   Widget build(BuildContext context) {
     final List<dynamic> todaysColorRGB = todaysColorData["rgb"];
+    Color randomColor = Color.fromRGBO(todaysColorRGB[0], todaysColorRGB[1], todaysColorRGB[2], 1);
     DateTime beginningOfDay = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
     if (widget.dailyChallengeAttempt != "" && DateTime.parse(widget.dailyChallengeAttempt).isAfter(beginningOfDay)) {
       // they already took a picture today
@@ -67,7 +76,7 @@ class _Daily_Challenge_PageState extends State<Daily_Challenge_Page> {
       countdownText: "Find this color before midnight",
       countdownValue: countdownValue,
       challengeWidget: Container(
-        color: Color.fromRGBO(todaysColorRGB[0], todaysColorRGB[1], todaysColorRGB[2], 1),
+        color: randomColor,
         child: SafeArea(
           child: Scaffold(
             backgroundColor: Colors.transparent,
@@ -79,11 +88,11 @@ class _Daily_Challenge_PageState extends State<Daily_Challenge_Page> {
                       flex: 1,
                       // random color
                       child: Container(
-                        color: Color.fromRGBO(todaysColorRGB[0], todaysColorRGB[1], todaysColorRGB[2], 1),
+                        color: randomColor,
                         height: MediaQuery.sizeOf(context).height / 2,
                       ),
                     ),
-                    Divider(
+                    const Divider(
                       height: 10,
                       thickness: 10,
                       color: Colors.black,
@@ -98,6 +107,13 @@ class _Daily_Challenge_PageState extends State<Daily_Challenge_Page> {
                       ),
                     ),
                   ],
+                ),
+                AnimatedContainer(
+                  height: _animatedHeight,
+                  width: double.infinity,
+                  color: randomColor,
+                  duration: const Duration(seconds: 2),
+                  curve: Curves.fastOutSlowIn,
                 ),
               ],
             ),
@@ -123,5 +139,23 @@ class _Daily_Challenge_PageState extends State<Daily_Challenge_Page> {
     prevColorAndPath.add(prevColor);
     prevColorAndPath.add(prevImgPath);
     return prevColorAndPath;
+  }
+
+  Future<void> _startTimer() async {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_duration.inSeconds == 0) {
+        timer.cancel();
+        setState(() {
+          _animatedHeight = 50;
+          _duration = _duration - const Duration(seconds: 1);
+        });
+      }
+      if (_duration.inSeconds > 0) {
+        setState(() {
+          _countdownValue = _duration.inSeconds;
+          _duration = _duration - const Duration(seconds: 1);
+        });
+      }
+    });
   }
 }

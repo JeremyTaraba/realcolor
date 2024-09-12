@@ -30,11 +30,11 @@ class _Unlimited_Challenge_PageState extends State<Unlimited_Challenge_Page> {
     () => 'Countdown finished',
   );
   final countdownValue = ValueNotifier(0);
-  Duration _duration = const Duration(seconds: 62);
+  Duration _duration = const Duration(seconds: 64);
   Timer? _timer;
   late int _countdownValue;
-  late var randomColorData;
-
+  late Map<String, dynamic> randomColorData;
+  double _animatedHeight = 2000;
   @override
   void initState() {
     super.initState();
@@ -52,12 +52,14 @@ class _Unlimited_Challenge_PageState extends State<Unlimited_Challenge_Page> {
   @override
   Widget build(BuildContext context) {
     final List<dynamic> randomColorRGB = randomColorData["rgb"];
+    Color randomColor = Color.fromRGBO(randomColorRGB[0], randomColorRGB[1], randomColorRGB[2], 1);
+
     return ChallengeCountdown(
       showCountdown: true,
       countdownText: "Find this color in 1 minute",
       countdownValue: countdownValue,
       challengeWidget: Container(
-        color: Color.fromRGBO(randomColorRGB[0], randomColorRGB[1], randomColorRGB[2], 1),
+        color: randomColor,
         child: SafeArea(
           child: Scaffold(
             backgroundColor: Colors.transparent,
@@ -69,11 +71,11 @@ class _Unlimited_Challenge_PageState extends State<Unlimited_Challenge_Page> {
                       flex: 1,
                       // random color
                       child: Container(
-                        color: Color.fromRGBO(randomColorRGB[0], randomColorRGB[1], randomColorRGB[2], 1),
+                        color: randomColor,
                         height: MediaQuery.sizeOf(context).height / 2,
                       ),
                     ),
-                    Divider(
+                    const Divider(
                       height: 10,
                       thickness: 10,
                       color: Colors.black,
@@ -90,7 +92,14 @@ class _Unlimited_Challenge_PageState extends State<Unlimited_Challenge_Page> {
                     ),
                   ],
                 ),
-                timerWidget(context, _countdownValue.toString())
+                timerWidget(context, _countdownValue.toString()),
+                AnimatedContainer(
+                  height: _animatedHeight,
+                  width: double.infinity,
+                  color: randomColor,
+                  duration: const Duration(seconds: 2),
+                  curve: Curves.fastOutSlowIn,
+                ),
               ],
             ),
           ),
@@ -101,6 +110,11 @@ class _Unlimited_Challenge_PageState extends State<Unlimited_Challenge_Page> {
 
   Future<String> _startTimer() async {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_duration.inSeconds == 61) {
+        setState(() {
+          _animatedHeight = 50;
+        });
+      }
       if (_duration.inSeconds <= 0) {
         // Countdown is finished
         timer.cancel();

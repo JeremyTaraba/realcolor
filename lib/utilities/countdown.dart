@@ -74,7 +74,7 @@ class _ChallengeCountdownState extends State<ChallengeCountdown> with TickerProv
                   opacity: _visible ? 1.0 : 0.0,
                   duration: const Duration(milliseconds: 1000),
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
                     child: RichText(
                       textAlign: TextAlign.center,
                       textScaler: MediaQuery.of(context).textScaler,

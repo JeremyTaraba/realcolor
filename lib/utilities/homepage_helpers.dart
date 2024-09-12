@@ -1,4 +1,5 @@
 import "package:app_settings/app_settings.dart";
+import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:permission_handler/permission_handler.dart";
 import "package:purchases_flutter/purchases_flutter.dart";
@@ -337,114 +338,130 @@ class _settingsDrawerState extends State<settingsDrawer> {
               ),
             ),
           ),
-          Text(
-            "Timezone",
-            style: TextStyle(fontSize: 30),
-            textAlign: TextAlign.center,
+          // Text(
+          //   "Timezone",
+          //   style: TextStyle(fontSize: 30),
+          //   textAlign: TextAlign.center,
+          // ),
+          // settingsDiv,
+          // Text(
+          //   "Color blind",
+          //   style: TextStyle(fontSize: 30),
+          //   textAlign: TextAlign.center,
+          // ),
+          // settingsDiv,
+          InkWell(
+            onTap: () {},
+            child: GestureDetector(
+              onTap: () {
+                //open camera permissions
+                AppSettings.openAppSettings(type: AppSettingsType.settings, asAnotherTask: true);
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Icon(
+                    Icons.camera_alt,
+                    size: 30,
+                  ),
+                  Text(
+                    "Camera Access",
+                    style: TextStyle(fontSize: 30),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
           ),
-          Divider(
-            height: 5,
-            thickness: 1,
-            color: Colors.black,
-          ),
-          Text(
-            "Color blind",
-            style: TextStyle(fontSize: 30),
-            textAlign: TextAlign.center,
-          ),
-          Divider(
-            height: 5,
-            thickness: 1,
-            color: Colors.black,
-          ),
-          Text(
-            "Camera Access",
-            style: TextStyle(fontSize: 30),
-            textAlign: TextAlign.center,
-          ),
-          Divider(
-            height: 5,
-            thickness: 1,
-            color: Colors.black,
-          ),
+          settingsDiv,
           Padding(
             padding: const EdgeInsets.all(12.0),
-            child: TextFormField(
-              style: TextStyle(fontSize: 18),
-              onChanged: (text) {
-                setState(() {
-                  submitted = false;
-                });
-              },
-              onFieldSubmitted: (text) async {
-                // check if correct or not and show check mark if it is
-                // x if it is not, change shared variable for code to have datetime now
-                setState(() {
-                  submitted = true;
-                });
-
-                if (text.toLowerCase() == "revenuecat") {
-                  SharedPreferences prefs = await SharedPreferences.getInstance();
-                  String? promoTimeStr = prefs.getString('promoCodeTime');
-                  if (promoTimeStr != null) {
-                    DateTime promoTime = DateTime.parse(promoTimeStr);
-                    if (promoTime.isBefore(DateTime.now().add(const Duration(days: 7)))) {
-                      // green check
-                      setState(() {
-                        validated = true;
-                      });
-                    } else {
-                      // promo expired
-                      // red x
-                      print("promo expired"); // uninstall and reinstall will reset this
-                      setState(() {
-                        validated = false;
-                      });
-                    }
-                  } else {
-                    prefs.setString('promoCodeTime', DateTime.now().toString());
-                    // green check
-                    setState(() {
-                      validated = true;
-                    });
-                  }
-                } else {
-                  // red x
-                  setState(() {
-                    validated = false;
-                  });
-                }
-              },
-              decoration: InputDecoration(
-                suffixIcon: promoCodePrefixIcon(validated, submitted),
-                border: OutlineInputBorder(),
-                fillColor: validated ? Colors.green.shade100 : Colors.red.shade100,
-                filled: submitted,
-                labelText: 'Promo Code',
-                labelStyle: TextStyle(fontSize: 20),
-              ),
-              maxLength: 10,
-            ),
+            child: promoCodeField(),
           ),
         ],
       ),
     );
   }
-}
 
-Widget promoCodePrefixIcon(bool validated, bool submitted) {
-  if (validated && submitted) {
-    return Icon(
-      Icons.check,
-      color: Colors.green,
+  Widget promoCodeField() {
+    return TextFormField(
+      style: TextStyle(fontSize: 18),
+      onChanged: (text) {
+        setState(() {
+          submitted = false;
+        });
+      },
+      onFieldSubmitted: (text) async {
+        // check if correct or not and show check mark if it is
+        // x if it is not, change shared variable for code to have datetime now
+        setState(() {
+          submitted = true;
+        });
+
+        if (text.toLowerCase() == "revenuecat") {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          String? promoTimeStr = prefs.getString('promoCodeTime');
+          if (promoTimeStr != null) {
+            DateTime promoTime = DateTime.parse(promoTimeStr);
+            if (promoTime.isBefore(DateTime.now().add(const Duration(days: 7)))) {
+              // green check
+              setState(() {
+                validated = true;
+              });
+            } else {
+              // promo expired
+              // red x
+              print("promo expired"); // uninstall and reinstall will reset this
+              setState(() {
+                validated = false;
+              });
+            }
+          } else {
+            prefs.setString('promoCodeTime', DateTime.now().toString());
+            // green check
+            setState(() {
+              validated = true;
+            });
+          }
+        } else {
+          // red x
+          setState(() {
+            validated = false;
+          });
+        }
+      },
+      decoration: InputDecoration(
+        suffixIcon: promoCodePrefixIcon(validated, submitted),
+        border: OutlineInputBorder(),
+        fillColor: validated ? Colors.green.shade100 : Colors.red.shade100,
+        filled: submitted,
+        labelText: 'Promo Code',
+        labelStyle: TextStyle(fontSize: 20),
+      ),
+      maxLength: 10,
     );
-  } else {
-    if (submitted) {
+  }
+
+  static const settingsDiv = Divider(
+    height: 5,
+    thickness: 1,
+    color: Colors.black,
+  );
+
+  Widget promoCodePrefixIcon(bool validated, bool submitted) {
+    if (validated && submitted) {
       return Icon(
-        Icons.close,
-        color: Colors.red,
+        Icons.check,
+        color: Colors.green,
       );
+    } else {
+      if (submitted) {
+        return Icon(
+          Icons.close,
+          color: Colors.red,
+        );
+      }
+      return const Icon(null);
     }
-    return const Icon(null);
   }
 }

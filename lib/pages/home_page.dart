@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:realcolor/pages/unlimited_challenge_page.dart';
 import 'dart:math';
 import 'package:realcolor/utilities/background_gradients.dart' as background;
@@ -15,17 +14,17 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:realcolor/utilities/homepage_helpers.dart';
 
-//TODO: show the color after the countdown fully on the screen and then hero animation it to the top
-//TODO: make popup buttons for unlimited look like popup on figma
-//TODO: center the back button on the results dialog and make it have a red bg
+import '../utilities/globals.dart';
+
 //TODO: work on adding awesome camera package in since it is faster.
 //TODO: after adding awesome camera, see if can make the cross hair change color according to what it sees
 //TODO: add a history to show results for past days
 //TODO: cancel camera after taking the picture since u can only take 1
 //TODO: try different backgrounds on the home screen (could go for a zzz look on the home screen)
+//TODO: in the settings you can change the time for unlimited mode
 
 class Home_Page extends StatefulWidget {
-  Home_Page({
+  const Home_Page({
     super.key,
     required this.camera,
   });
@@ -39,17 +38,16 @@ class _Home_PageState extends State<Home_Page> {
   final random = Random();
   late List colorListFromJson;
   late String dailyChallengeAttemptTime;
-  bool _isPro = false;
   TextEditingController promoCode = TextEditingController();
 
   List<List<Color>> randomColorArray = background.allBackgroundGradients;
 
-  Future<String> readJsonAndCheckProStatus() async {
+  Future<String> readJson() async {
     final String response = await rootBundle.loadString('assets/colors.json');
     final data = await json.decode(response);
     colorListFromJson = data;
+    GLOBAL_COLOR_LIST = colorListFromJson;
     dailyChallengeAttemptTime = await getDailyChallengeTime();
-    // await setupIsPro();
     return "done";
   }
 
@@ -64,27 +62,27 @@ class _Home_PageState extends State<Home_Page> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: readJsonAndCheckProStatus(),
+        future: readJson(),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           if (snapshot.hasData) {
             return Stack(
               children: [
                 FancyContainer(
                   size: Size(MediaQuery.of(context).size.width, MediaQuery.of(context).size.height),
-                  cycle: Duration(seconds: 30),
+                  cycle: const Duration(seconds: 30),
                   colors: randomColorArray[random.nextInt(randomColorArray.length)],
                 ),
                 SafeArea(
                   child: Scaffold(
                     drawer: infoDrawer(),
-                    endDrawer: settingsDrawer(),
+                    endDrawer: const settingsDrawer(),
                     backgroundColor: Colors.transparent,
                     body: Builder(builder: (context) {
                       return Column(
                         children: [
                           Flexible(
                             flex: 4,
-                            child: Container(
+                            child: SizedBox(
                               height: double.infinity,
                               child: Padding(
                                 padding: const EdgeInsets.all(4.0),
@@ -102,7 +100,7 @@ class _Home_PageState extends State<Home_Page> {
                               child: Padding(
                                 padding: const EdgeInsets.all(15.0),
                                 child: Stack(children: [
-                                  Opacity(child: Image.asset(appIconPath, color: Colors.black), opacity: 0.5),
+                                  Opacity(opacity: 0.5, child: Image.asset(appIconPath, color: Colors.black)),
                                   ClipRect(child: BackdropFilter(filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 6.0), child: Image.asset(appIconPath)))
                                 ]),
                               ),
@@ -219,15 +217,6 @@ class _Home_PageState extends State<Home_Page> {
     } else {
       return const Drawer();
     }
-  }
-
-  Future<void> setupIsPro() async {
-    Purchases.addCustomerInfoUpdateListener((customerInfo) async {
-      EntitlementInfo? entitlement = customerInfo.entitlements.all["pro"];
-      setState(() {
-        _isPro = entitlement?.isActive ?? false;
-      });
-    });
   }
 
   Widget infoAndSettings(icon) {
