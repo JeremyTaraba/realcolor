@@ -4,11 +4,11 @@ import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'package:realcolor/utilities/countdown.dart';
+import 'package:realcolor/utilities/widgets/countdown.dart';
 
-import '../utilities/camera_widget.dart';
+import '../utilities/widgets/camera_widget.dart';
 import '../utilities/challenge_helpers.dart';
-import '../utilities/timer.dart';
+import '../utilities/widgets/timer.dart';
 
 class Unlimited_Challenge_Page extends StatefulWidget {
   Unlimited_Challenge_Page({

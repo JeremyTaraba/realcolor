@@ -5,7 +5,7 @@ import "package:flutter/material.dart";
 import "package:realcolor/utilities/color_detection.dart";
 import "package:shared_preferences/shared_preferences.dart";
 
-import "challenge_helpers.dart";
+import "../challenge_helpers.dart";
 
 // A screen that allows users to take a picture using a given camera.
 class ChallengeCameraScreen extends StatefulWidget {

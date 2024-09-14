@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:realcolor/utilities/camera_widget.dart';
-import 'package:realcolor/utilities/countdown.dart';
+import 'package:realcolor/utilities/widgets/camera_widget.dart';
+import 'package:realcolor/utilities/widgets/countdown.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utilities/challenge_helpers.dart';

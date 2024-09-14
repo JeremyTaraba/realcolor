@@ -5,21 +5,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:realcolor/pages/unlimited_challenge_page.dart';
 import 'dart:math';
-import 'package:realcolor/utilities/background_gradients.dart' as background;
+import 'package:realcolor/utilities/variables/background_gradients.dart' as background;
 
 import 'dart:convert';
 
-import '../utilities/fancy_container.dart';
+import '../utilities/widgets/fancy_container.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:realcolor/utilities/homepage_helpers.dart';
 
-import '../utilities/globals.dart';
+import '../utilities/variables/globals.dart';
 
 //TODO: work on adding awesome camera package in since it is faster.
 //TODO: after adding awesome camera, see if can make the cross hair change color according to what it sees
-//TODO: add a history to show results for past days
 //TODO: cancel camera after taking the picture since u can only take 1
+//TODO: add a history to show results for past days
 //TODO: try different backgrounds on the home screen (could go for a zzz look on the home screen)
 //TODO: in the settings you can change the time for unlimited mode
 

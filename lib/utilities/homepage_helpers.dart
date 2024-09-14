@@ -4,7 +4,7 @@ import "package:flutter/material.dart";
 import "package:permission_handler/permission_handler.dart";
 import "package:purchases_flutter/purchases_flutter.dart";
 import "package:purchases_ui_flutter/purchases_ui_flutter.dart";
-import "package:realcolor/utilities/constants.dart";
+import "package:realcolor/utilities/variables/constants.dart";
 import "package:shared_preferences/shared_preferences.dart";
 
 import "../pages/daily_challenge_page.dart";

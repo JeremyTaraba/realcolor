@@ -4,9 +4,9 @@ import 'package:camera/camera.dart';
 import "package:flutter/material.dart";
 import 'package:realcolor/pages/unlimited_challenge_page.dart';
 import 'package:realcolor/utilities/color_detection.dart';
-import 'package:realcolor/utilities/constants.dart';
+import 'package:realcolor/utilities/variables/constants.dart';
 
-import 'globals.dart';
+import 'variables/globals.dart';
 
 dynamic getTodaysColor(List colorList) {
   final seed = _getTodaysSeed();
