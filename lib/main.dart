@@ -7,6 +7,14 @@ import 'package:realcolor/pages/home_page.dart';
 import 'package:realcolor/utilities/api_keys.dart';
 import 'package:realcolor/utilities/globals.dart';
 
+/* 
+Outside Sources: 
+Color Dataset from: https://www.kaggle.com/datasets/avi1023/color-names
+Color Comparison Algorithm from: https://en.wikipedia.org/wiki/Color_difference
+Fonts from: Google
+Packages from: Pub dev
+*/
+
 Future<void> main() async {
   // Ensure that plugin services are initialized so that `availableCameras()`
   // can be called before `runApp()`
