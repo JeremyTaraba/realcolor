@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:realcolor/utilities/widgets/camera_widget.dart';
 import 'package:realcolor/utilities/widgets/countdown.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utilities/challenge_helpers.dart';
+import '../utilities/widgets/camera_widget2.dart';
 
 class Daily_Challenge_Page extends StatefulWidget {
   const Daily_Challenge_Page({
@@ -27,7 +27,7 @@ class _Daily_Challenge_PageState extends State<Daily_Challenge_Page> {
   late int _countdownValue; // flutter says this isn't used for some reason
   late Duration _duration = const Duration(seconds: 3);
   late Map<String, dynamic> todaysColorData;
-  Timer? _timer;
+  Timer? _timer; // this is used for timing the container animation
   double _animatedHeight = 2000;
 
   @override
@@ -49,11 +49,10 @@ class _Daily_Challenge_PageState extends State<Daily_Challenge_Page> {
     Color randomColor = Color.fromRGBO(todaysColorRGB[0], todaysColorRGB[1], todaysColorRGB[2], 1);
     DateTime beginningOfDay = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
     if (widget.dailyChallengeAttempt != "" && DateTime.parse(widget.dailyChallengeAttempt).isAfter(beginningOfDay)) {
-      // they already took a picture today
-
+      // user already took a picture today
       return Scaffold(
         body: FutureBuilder(
-          future: getPreviousAttempt(), // get info from sharedprefs and show results
+          future: getPreviousAttempt(), // get info from shared prefs and show results
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return Scaffold(
@@ -100,8 +99,7 @@ class _Daily_Challenge_PageState extends State<Daily_Challenge_Page> {
                     Flexible(
                       flex: 1,
                       // camera
-                      child: ChallengeCameraScreen(
-                        camera: widget.camera,
+                      child: CameraPage(
                         todaysColorData: todaysColorData,
                         isDaily: true,
                       ),

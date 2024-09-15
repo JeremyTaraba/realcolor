@@ -7,6 +7,10 @@ import "package:shared_preferences/shared_preferences.dart";
 
 import "../challenge_helpers.dart";
 
+/*
+This is the old camera, it is no longer used because its slow to take pictures after pressing the capture button
+*/
+
 // A screen that allows users to take a picture using a given camera.
 class ChallengeCameraScreen extends StatefulWidget {
   ChallengeCameraScreen({
@@ -80,7 +84,7 @@ class ChallengeCameraScreenState extends State<ChallengeCameraScreen> {
                   ),
                 ),
               ),
-              Center(
+              const Center(
                 child: Icon(
                   Icons.pages,
                   size: 50,
@@ -134,7 +138,7 @@ class ChallengeCameraScreenState extends State<ChallengeCameraScreen> {
           if (timer != null) {
             timer.cancel();
           }
-
+          _controller.dispose();
           // If the picture was taken, open dialog box.
           showDialog<void>(
             context: context,

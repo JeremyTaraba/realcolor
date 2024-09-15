@@ -8,16 +8,15 @@ import 'package:realcolor/utilities/widgets/countdown.dart';
 
 import '../utilities/widgets/camera_widget.dart';
 import '../utilities/challenge_helpers.dart';
+import '../utilities/widgets/camera_widget2.dart';
 import '../utilities/widgets/timer.dart';
 
 class Unlimited_Challenge_Page extends StatefulWidget {
   Unlimited_Challenge_Page({
     super.key,
-    required this.camera,
     required this.colorList,
   });
 
-  final CameraDescription camera;
   final List colorList;
 
   @override
@@ -83,8 +82,7 @@ class _Unlimited_Challenge_PageState extends State<Unlimited_Challenge_Page> {
                     Flexible(
                       flex: 1,
                       // camera
-                      child: ChallengeCameraScreen(
-                        camera: widget.camera,
+                      child: CameraPage(
                         todaysColorData: randomColorData,
                         isDaily: false,
                         timer: _timer,

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
@@ -13,6 +11,7 @@ Color Dataset from: https://www.kaggle.com/datasets/avi1023/color-names
 Color Comparison Algorithm from: https://en.wikipedia.org/wiki/Color_difference
 Fonts from: Google
 Packages from: Pub dev
+In-App Purchases: Revenue Cat
 */
 
 Future<void> main() async {
@@ -28,7 +27,7 @@ Future<void> main() async {
 
 // Get a specific camera from the list of available cameras.
   final firstCamera = cameras.first;
-  GLOBAL_FIRST_CAMERA = firstCamera;
+
   runApp(MyApp(
     camera: firstCamera,
   ));
