@@ -48,7 +48,7 @@ Widget resultDialog(todaysColorData, BuildContext context, Color usersColor, Str
           width: MediaQuery.of(context).size.width,
           child: ListBody(
             children: <Widget>[
-              Text(
+              const Text(
                 'Results',
                 style: kFontStyleHeader1,
                 textAlign: TextAlign.center,
@@ -72,8 +72,8 @@ Widget resultDialog(todaysColorData, BuildContext context, Color usersColor, Str
                           style: TextStyle(fontSize: 20),
                           textAlign: TextAlign.center,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
                           child: Divider(
                             thickness: 2,
                           ),
@@ -85,7 +85,7 @@ Widget resultDialog(todaysColorData, BuildContext context, Color usersColor, Str
                         ),
                         Text(
                           todaysColorData["name"],
-                          style: TextStyle(fontSize: 20),
+                          style: const TextStyle(fontSize: 20),
                           textAlign: TextAlign.center,
                         ),
                         Container(
@@ -95,7 +95,7 @@ Widget resultDialog(todaysColorData, BuildContext context, Color usersColor, Str
                         ),
                         Text(
                           todaysColorData["hex"].toString().toUpperCase(),
-                          style: TextStyle(fontSize: 20),
+                          style: const TextStyle(fontSize: 20),
                           textAlign: TextAlign.center,
                         ),
                         const Padding(
@@ -122,7 +122,7 @@ Widget resultDialog(todaysColorData, BuildContext context, Color usersColor, Str
                           style: TextStyle(fontSize: 20),
                           textAlign: TextAlign.center,
                         ),
-                        Container(
+                        SizedBox(
                           height: 250,
                           width: 250,
                           child: imagePath != ""
@@ -162,10 +162,10 @@ Widget resultDialog(todaysColorData, BuildContext context, Color usersColor, Str
                 ),
               ),
               isDaily
-                  ? Text(
+                  ? const Text(
                       "Try again tomorrow!",
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 20,
                       ),
                     )
@@ -175,10 +175,10 @@ Widget resultDialog(todaysColorData, BuildContext context, Color usersColor, Str
                         Navigator.of(context)
                             .pushReplacement(MaterialPageRoute(builder: (context) => Unlimited_Challenge_Page(colorList: GLOBAL_COLOR_LIST)));
                       },
-                      child: Text(
+                      child: const Text(
                         "Try again?",
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 20,
                         ),
                       ),

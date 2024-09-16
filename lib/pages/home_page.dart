@@ -13,11 +13,12 @@ import 'package:app_settings/app_settings.dart';
 import 'package:realcolor/utilities/homepage_helpers.dart';
 import '../utilities/variables/globals.dart';
 
-//TODO: add a history to show results for past days
+//TODO: add a history to show results for past days (when go into calendar add a streaks at the top)
 //TODO: watch an ad if u want to redo the daily
 //TODO: add animations for transitions
 //TODO: in the settings you can change the time for unlimited mode
 //TODO: see if can make the cross hair change color according to what it sees (would need to scan screen for this)
+//TODO: show ad but only if u get a bad score after daily (unlimited shouldn't have ad)
 
 class Home_Page extends StatefulWidget {
   const Home_Page({

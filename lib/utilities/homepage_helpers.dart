@@ -1,5 +1,4 @@
 import "package:app_settings/app_settings.dart";
-import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:permission_handler/permission_handler.dart";
 import "package:purchases_flutter/purchases_flutter.dart";
@@ -264,7 +263,7 @@ Drawer infoDrawer() {
             decoration: BoxDecoration(
               color: Colors.blue[100],
             ),
-            child: Center(
+            child: const Center(
               child: Text(
                 'How To Play',
                 style: kFontStyleInfoHeader,
@@ -329,7 +328,7 @@ class _settingsDrawerState extends State<settingsDrawer> {
               decoration: BoxDecoration(
                 color: Colors.red[200],
               ),
-              child: Center(
+              child: const Center(
                 child: Text(
                   'Settings',
                   style: kFontStyleInfoHeader,
@@ -357,7 +356,7 @@ class _settingsDrawerState extends State<settingsDrawer> {
                 //open camera permissions
                 AppSettings.openAppSettings(type: AppSettingsType.settings, asAnotherTask: true);
               },
-              child: Row(
+              child: const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Icon(
@@ -450,13 +449,13 @@ class _settingsDrawerState extends State<settingsDrawer> {
 
   Widget promoCodePrefixIcon(bool validated, bool submitted) {
     if (validated && submitted) {
-      return Icon(
+      return const Icon(
         Icons.check,
         color: Colors.green,
       );
     } else {
       if (submitted) {
-        return Icon(
+        return const Icon(
           Icons.close,
           color: Colors.red,
         );

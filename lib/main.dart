@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:realcolor/pages/home_page.dart';
 import 'package:realcolor/utilities/api_keys.dart';
-import 'package:realcolor/utilities/variables/globals.dart';
-
 /* 
 Outside Sources: 
 Color Dataset from: https://www.kaggle.com/datasets/avi1023/color-names

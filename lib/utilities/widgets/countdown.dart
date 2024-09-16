@@ -1,9 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-
-import 'package:flutter/widgets.dart';
 
 class ChallengeCountdown extends StatefulWidget {
   ChallengeCountdown({
@@ -79,7 +76,7 @@ class _ChallengeCountdownState extends State<ChallengeCountdown> with TickerProv
                       textAlign: TextAlign.center,
                       textScaler: MediaQuery.of(context).textScaler,
                       text: TextSpan(
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 20.0,
                           color: Colors.black,
                         ),
