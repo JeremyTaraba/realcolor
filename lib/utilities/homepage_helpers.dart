@@ -1,8 +1,11 @@
 import "package:app_settings/app_settings.dart";
+import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
+import "package:flutter/widgets.dart";
 import "package:permission_handler/permission_handler.dart";
 import "package:purchases_flutter/purchases_flutter.dart";
 import "package:purchases_ui_flutter/purchases_ui_flutter.dart";
+import "package:realcolor/pages/calendar_page.dart";
 import "package:realcolor/utilities/variables/constants.dart";
 import "package:shared_preferences/shared_preferences.dart";
 
@@ -68,49 +71,70 @@ Future<String> getDailyChallengeTime() async {
 Widget dailyButton(text, context, camera, colorListFromJson) {
   return Flexible(
     flex: 2,
-    child: Padding(
-      padding: const EdgeInsets.symmetric(vertical: 15.0),
-      child: GestureDetector(
-        onTap: () async {
-          String dailyChallengeTime = await getDailyChallengeTime();
-          await checkCameraPermissionsPush(
-            context,
-            snackBar,
-            Daily_Challenge_Page(
-              camera: camera,
-              colorList: colorListFromJson,
-              dailyChallengeAttempt: dailyChallengeTime,
-            ),
-          );
-        },
-        child: Container(
-          width: MediaQuery.of(context).size.width / 2,
-          decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.black,
-                width: 3,
-                strokeAlign: BorderSide.strokeAlignCenter,
-              ),
-              color: Colors.white,
-              borderRadius: const BorderRadius.all(
-                Radius.circular(25.0),
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  spreadRadius: 5,
-                  blurRadius: 7,
-                  offset: Offset(1, 2),
-                )
-              ]),
+    child: Row(
+      children: [
+        Flexible(
+          flex: 1,
           child: Center(
-            child: Text(
-              text,
-              style: kFontStyleDaily,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CalendarPage()));
+              },
+              child: dropShadowIcon(Icons.calendar_month),
             ),
           ),
         ),
-      ),
+        Flexible(
+          flex: 2,
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 15.0),
+              child: GestureDetector(
+                onTap: () async {
+                  String dailyChallengeTime = await getDailyChallengeTime();
+                  await checkCameraPermissionsPush(
+                    context,
+                    snackBar,
+                    Daily_Challenge_Page(
+                      camera: camera,
+                      colorList: colorListFromJson,
+                      dailyChallengeAttempt: dailyChallengeTime,
+                    ),
+                  );
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width / 2,
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.black,
+                        width: 3,
+                        strokeAlign: BorderSide.strokeAlignCenter,
+                      ),
+                      color: Colors.white,
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(25.0),
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset: Offset(1, 2),
+                        )
+                      ]),
+                  child: Center(
+                    child: Text(
+                      text,
+                      style: kFontStyleDaily,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        const Spacer(),
+      ],
     ),
   );
 }
@@ -250,6 +274,27 @@ Future<void> checkCameraPermissionsPushReplace(context, snackBar, nav) async {
       }
     }
   }
+}
+
+Widget dropShadowIcon(icon) {
+  return Stack(
+    children: [
+      Positioned(
+        left: 1.0,
+        top: 1.0,
+        child: Icon(
+          icon,
+          color: Colors.black54,
+          size: 41,
+        ),
+      ),
+      Icon(
+        icon,
+        color: Colors.white,
+        size: 40,
+      ),
+    ],
+  );
 }
 
 Drawer infoDrawer() {

@@ -145,14 +145,14 @@ class _Home_PageState extends State<Home_Page> {
                                   children: [
                                     // info button
                                     GestureDetector(
-                                      child: infoAndSettings(Icons.info),
+                                      child: dropShadowIcon(Icons.info),
                                       onTap: () {
                                         Scaffold.of(context).openDrawer();
                                       },
                                     ),
                                     // settings button
                                     GestureDetector(
-                                      child: infoAndSettings(Icons.settings),
+                                      child: dropShadowIcon(Icons.settings),
                                       onTap: () {
                                         Scaffold.of(context).openEndDrawer();
                                       },
@@ -216,26 +216,5 @@ class _Home_PageState extends State<Home_Page> {
     } else {
       return const Drawer();
     }
-  }
-
-  Widget infoAndSettings(icon) {
-    return Stack(
-      children: [
-        Positioned(
-          left: 1.0,
-          top: 1.0,
-          child: Icon(
-            icon,
-            color: Colors.black54,
-            size: 41,
-          ),
-        ),
-        Icon(
-          icon,
-          color: Colors.white,
-          size: 40,
-        ),
-      ],
-    );
   }
 }

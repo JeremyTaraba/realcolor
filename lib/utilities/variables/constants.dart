@@ -10,13 +10,13 @@ const TextStyle kFontStyleInfoHeader = TextStyle(fontSize: 30, fontWeight: FontW
 
 const TextStyle kFontStyleUnlimited = TextStyle(
   fontFamily: "PermanentMarker",
-  fontSize: 34,
+  fontSize: 30,
   letterSpacing: 1.5,
 );
 
 const TextStyle kFontStyleDaily = TextStyle(
   fontFamily: "PermanentMarker",
-  fontSize: 38,
+  fontSize: 34,
   letterSpacing: 2.0,
 );
 
