@@ -16,9 +16,12 @@ import '../utilities/variables/globals.dart';
 //TODO: add a history to show results for past days (when go into calendar add a streaks at the top)
 //TODO: watch an ad if u want to redo the daily
 //TODO: add animations for transitions
+//TODO: Add pinch to zoom
 //TODO: in the settings you can change the time for unlimited mode
 //TODO: see if can make the cross hair change color according to what it sees (would need to scan screen for this)
 //TODO: show ad but only if u get a bad score after daily (unlimited shouldn't have ad)
+//TODO: if adding a way to change times to unlimited can also add different streak amount to each that only show when you change the time
+//TODO: add an unlimited enhanced mode where you get to pick 3 colors each round to choose from. (could be like rogue like where you get buff like 2x score or less time)
 
 class Home_Page extends StatefulWidget {
   const Home_Page({
