@@ -14,9 +14,10 @@ import 'package:realcolor/utilities/homepage_helpers.dart';
 import '../utilities/variables/globals.dart';
 
 //TODO: add a history to show results for past days (when go into calendar add a streaks at the top)
+//TODO: black bars on camera are really ugly, see if can change color or something
 //TODO: watch an ad if u want to redo the daily
 //TODO: add animations for transitions
-//TODO: Add pinch to zoom
+//TODO: make the camera bigger by making the color smaller
 //TODO: in the settings you can change the time for unlimited mode
 //TODO: see if can make the cross hair change color according to what it sees (would need to scan screen for this)
 //TODO: show ad but only if u get a bad score after daily (unlimited shouldn't have ad)
