@@ -1,6 +1,8 @@
 import "dart:io";
 import 'dart:math';
+import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
+import 'package:flutter/scheduler.dart';
 import 'package:realcolor/pages/unlimited_challenge_page.dart';
 import 'package:realcolor/utilities/color_detection.dart';
 import 'package:realcolor/utilities/variables/constants.dart';
@@ -38,11 +40,6 @@ Widget resultDialog(todaysColorData, BuildContext context, Color usersColor, Str
   }
   return PopScope(
     canPop: false,
-    onPopInvoked: (pop) {
-      Navigator.of(context)
-        ..pop()
-        ..pop();
-    },
     child: AlertDialog.adaptive(
       surfaceTintColor: Colors.transparent,
       backgroundColor: Colors.white,
@@ -147,13 +144,13 @@ Widget resultDialog(todaysColorData, BuildContext context, Color usersColor, Str
                                 textAlign: TextAlign.center,
                                 textScaler: MediaQuery.of(context).textScaler,
                                 text: TextSpan(
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 20.0,
                                     color: Colors.black,
                                   ),
                                   children: <TextSpan>[
-                                    TextSpan(text: "Match: "),
-                                    TextSpan(text: "${score.toString()}%", style: TextStyle(fontWeight: FontWeight.bold)),
+                                    const TextSpan(text: "Match: "),
+                                    TextSpan(text: "${score.toString()}%", style: const TextStyle(fontWeight: FontWeight.bold)),
                                   ],
                                 ),
                               ),
@@ -194,12 +191,8 @@ Widget resultDialog(todaysColorData, BuildContext context, Color usersColor, Str
       ),
       actionsAlignment: MainAxisAlignment.center,
       actions: <Widget>[
-        TextButton(
-          child: const Text(
-            'Back to Menu',
-            style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 20),
-          ),
-          onPressed: () {
+        GestureDetector(
+          onTap: () {
             if (secondAttempt) {
               Navigator.of(context).pop();
             } else {
@@ -208,6 +201,29 @@ Widget resultDialog(todaysColorData, BuildContext context, Color usersColor, Str
                 ..pop();
             }
           },
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.red,
+              borderRadius: const BorderRadius.all(
+                Radius.circular(25.0),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                  offset: const Offset(1, 2),
+                )
+              ],
+            ),
+            child: const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text(
+                "Back to Menu",
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22),
+              ),
+            ),
+          ),
         ),
       ],
     ),

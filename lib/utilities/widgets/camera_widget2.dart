@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:app_settings/app_settings.dart';
 import 'package:camera/camera.dart';
 import 'package:camerawesome/camerawesome_plugin.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -94,14 +95,17 @@ class _CameraPageState extends State<CameraPage> {
             topActionsBuilder: (state) => AwesomeTopActions(
               padding: EdgeInsets.zero,
               state: state,
-              children: const [
-                // Expanded(
-                //   child: AwesomeFilterWidget(
-                //     state: state,
-                //     filterListPosition: FilterListPosition.aboveButton,
-                //     filterListPadding: const EdgeInsets.only(top: 8),
-                //   ),
-                // ),
+              children: [
+                Container(
+                  color: Colors.black54,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Zoom: ${(state.sensorConfig.zoom * 100).toStringAsFixed(0)}%',
+                      style: TextStyle(fontSize: 18, color: Colors.orange),
+                    ),
+                  ),
+                )
               ],
             ),
             middleContentBuilder: (state) {

@@ -13,7 +13,6 @@ import 'package:app_settings/app_settings.dart';
 import 'package:realcolor/utilities/homepage_helpers.dart';
 import '../utilities/variables/globals.dart';
 
-//TODO: add a history to show results for past days (when go into calendar add a streaks at the top)
 //TODO: watch an ad if u want to redo the daily
 //TODO: add animations for transitions
 //TODO: in the settings you can change the time for unlimited mode (highest level will correspond to the time when changing it)

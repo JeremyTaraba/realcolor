@@ -30,6 +30,7 @@ class _CalendarPageState extends State<CalendarPage> {
   late dynamic jsonBody;
   int highestStreak = 0;
   int currentStreak = 0;
+  Map<DateTime, int> dailyScores = {};
 
   Future<String> _read() async {
     String text = "";
@@ -122,10 +123,25 @@ class _CalendarPageState extends State<CalendarPage> {
     return "Done";
   }
 
+  Future<void> _getDailyScores() async {
+    String body = await _read();
+    jsonBody = json.decode(body);
+    DateTime dayWithTime;
+    DateTime justDay;
+    for (var i = 0; i < jsonBody.length; i++) {
+      dayWithTime = DateTime.parse(jsonBody[i]["date"]);
+      justDay = DateTime(dayWithTime.year, dayWithTime.month, dayWithTime.day);
+      dailyScores[justDay] = jsonBody[i]["users_score"];
+    }
+
+    setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
     _getStreaks();
+    _getDailyScores();
     // _writeNew();
     // _writeAppend(
     //     '{"date" : "${DateTime.now().subtract(Duration(days: 4)).toString()}", "todays_color_rgb": [93, 138, 168], "todays_color_name": "Color Name", "users_color_rgb": [40, 138, 16], "users_score": 72}');
@@ -142,6 +158,46 @@ class _CalendarPageState extends State<CalendarPage> {
     return kEvents[day] ?? [];
   }
 
+  Color _getColorFromScore(score) {
+    if (score >= 91) {
+      return Colors.purple.shade300;
+    } else if (score >= 81) {
+      return Colors.blue.shade300;
+    } else if (score >= 71) {
+      return Colors.green.shade300;
+    } else if (score >= 61) {
+      return Colors.orange.shade300;
+    } else if (score >= 0) {
+      return Colors.red.shade300;
+    } else {
+      return Colors.white;
+    }
+  }
+
+  Widget _buildCellDate(DateTime day, Map<DateTime, int> calendarScores, {DateTime? focusedDay}) {
+    DateTime justDay = DateTime(day.year, day.month, day.day);
+    int? score = calendarScores[justDay];
+    score ??= -1;
+    Color boxColor = _getColorFromScore(score);
+    return Container(
+      margin: const EdgeInsets.all(3),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        shape: (day == focusedDay) ? BoxShape.circle : BoxShape.rectangle,
+        color: (day == focusedDay)
+            ? boxColor == Colors.white
+                ? Colors.grey.shade400
+                : boxColor.withOpacity(0.8)
+            : boxColor,
+        borderRadius: (day == focusedDay) ? null : BorderRadius.circular(4),
+      ),
+      child: Text(
+        day.day.toString(),
+        style: const TextStyle(color: Colors.black),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -149,7 +205,6 @@ class _CalendarPageState extends State<CalendarPage> {
         body: Column(
           children: [
             TableCalendar(
-              daysOfWeekStyle: DaysOfWeekStyle(),
               firstDay: DateTime.utc(2024, 7, 10),
               lastDay: DateTime.now(),
               focusedDay: _focusedDay,
@@ -159,7 +214,11 @@ class _CalendarPageState extends State<CalendarPage> {
               selectedDayPredicate: (day) {
                 return isSameDay(_selectedDay, day);
               },
-              calendarStyle: CalendarStyle(),
+              calendarBuilders: CalendarBuilders(
+                selectedBuilder: (context, day, focusedDay) => _buildCellDate(day, dailyScores, focusedDay: focusedDay),
+                defaultBuilder: (context, day, focusedDay) => _buildCellDate(day, dailyScores),
+                todayBuilder: (context, day, focusedDay) => _buildCellDate(day, dailyScores),
+              ),
               onDaySelected: (selectedDay, focusedDay) {
                 if (!isSameDay(_selectedDay, selectedDay)) {
                   // Call `setState()` when updating the selected day
@@ -192,79 +251,82 @@ class _CalendarPageState extends State<CalendarPage> {
                                   vertical: 4.0,
                                 ),
                                 decoration: BoxDecoration(
-                                  border: Border.all(),
-                                  borderRadius: BorderRadius.circular(12.0),
-                                ),
-                                child: Card(
-                                  borderOnForeground: false,
                                   color: Colors.white,
-                                  surfaceTintColor: Colors.white,
-                                  elevation: 10,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                      children: [
-                                        const Text(
-                                          "Results",
-                                          style: kFontStyleHeader1,
-                                        ),
-                                        const Divider(
-                                          thickness: 2,
-                                        ),
-                                        Text(
-                                          value[index].colorName,
-                                          style: TextStyle(fontSize: 24),
-                                        ),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            const Text(
-                                              "Daily Color: ",
-                                              style: TextStyle(fontSize: 20),
-                                            ),
-                                            Container(
-                                              height: 40,
-                                              width: 40,
-                                              color: Color.fromRGBO(value[index].colorRGB[0], value[index].colorRGB[1], value[index].colorRGB[2], 1),
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 10),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            const Text(
-                                              "Your Color: ",
-                                              style: TextStyle(fontSize: 20),
-                                            ),
-                                            Container(
-                                              height: 40,
-                                              width: 40,
-                                              color: Color.fromRGBO(
-                                                  value[index].userColorRGB[0], value[index].userColorRGB[1], value[index].userColorRGB[2], 1),
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 10),
-                                        RichText(
-                                          textAlign: TextAlign.center,
-                                          textScaler: MediaQuery.of(context).textScaler,
-                                          text: TextSpan(
-                                            style: const TextStyle(
-                                              fontSize: 20.0,
-                                              color: Colors.black,
-                                            ),
-                                            children: <TextSpan>[
-                                              TextSpan(text: "Match: "),
-                                              TextSpan(text: "${value[index].score.toString()}%", style: TextStyle(fontWeight: FontWeight.bold)),
-                                            ],
+                                  border: Border.all(width: 2),
+                                  borderRadius: BorderRadius.circular(12.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2),
+                                      spreadRadius: 3,
+                                      blurRadius: 3,
+                                      offset: Offset(1, 2),
+                                    )
+                                  ],
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                    children: [
+                                      const Text(
+                                        "Results",
+                                        style: kFontStyleHeader1,
+                                      ),
+                                      const Divider(
+                                        thickness: 2,
+                                      ),
+                                      Text(
+                                        value[index].colorName,
+                                        style: TextStyle(fontSize: 24),
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          const Text(
+                                            "Daily Color: ",
+                                            style: TextStyle(fontSize: 20),
                                           ),
+                                          Container(
+                                            height: 40,
+                                            width: 40,
+                                            color: Color.fromRGBO(value[index].colorRGB[0], value[index].colorRGB[1], value[index].colorRGB[2], 1),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 10),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          const Text(
+                                            "Your Color: ",
+                                            style: TextStyle(fontSize: 20),
+                                          ),
+                                          Container(
+                                            height: 40,
+                                            width: 40,
+                                            color: Color.fromRGBO(
+                                                value[index].userColorRGB[0], value[index].userColorRGB[1], value[index].userColorRGB[2], 1),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 10),
+                                      RichText(
+                                        textAlign: TextAlign.center,
+                                        textScaler: MediaQuery.of(context).textScaler,
+                                        text: TextSpan(
+                                          style: const TextStyle(
+                                            fontSize: 20.0,
+                                            color: Colors.black,
+                                          ),
+                                          children: <TextSpan>[
+                                            TextSpan(text: "Match: "),
+                                            TextSpan(text: "${value[index].score.toString()}%", style: TextStyle(fontWeight: FontWeight.bold)),
+                                          ],
                                         ),
-                                        const SizedBox(height: 10),
-                                        getScoreText(value[index].score),
-                                      ],
-                                    ),
+                                      ),
+                                      const SizedBox(height: 10),
+                                      getScoreText(value[index].score),
+                                    ],
                                   ),
                                 ),
                               );
@@ -282,18 +344,19 @@ class _CalendarPageState extends State<CalendarPage> {
               child: Container(
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
-                    color: Colors.blue[100],
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(15.0),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        spreadRadius: 3,
-                        blurRadius: 3,
-                        offset: Offset(1, 2),
-                      )
-                    ]),
+                  color: Colors.blue[100],
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(15.0),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      spreadRadius: 3,
+                      blurRadius: 3,
+                      offset: Offset(1, 2),
+                    )
+                  ],
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: RichText(

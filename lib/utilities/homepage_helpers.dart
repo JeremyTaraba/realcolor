@@ -31,7 +31,7 @@ Widget challengeButton(String text, context, alert) {
               border: Border.all(
                 color: Colors.black,
                 width: 3,
-                strokeAlign: BorderSide.strokeAlignCenter,
+                strokeAlign: BorderSide.strokeAlignOutside,
               ),
               color: Colors.white,
               borderRadius: const BorderRadius.all(
@@ -122,23 +122,24 @@ Widget dailyButton(text, context, camera, colorListFromJson) {
                 child: Container(
                   width: MediaQuery.of(context).size.width / 2,
                   decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.black,
-                        width: 3,
-                        strokeAlign: BorderSide.strokeAlignCenter,
-                      ),
-                      color: Colors.white,
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(25.0),
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
-                          spreadRadius: 5,
-                          blurRadius: 7,
-                          offset: Offset(1, 2),
-                        )
-                      ]),
+                    border: Border.all(
+                      color: Colors.black,
+                      width: 3,
+                      strokeAlign: BorderSide.strokeAlignOutside,
+                    ),
+                    color: Colors.white,
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(25.0),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: Offset(1, 2),
+                      )
+                    ],
+                  ),
                   child: Center(
                     child: Text(
                       text,
@@ -342,7 +343,7 @@ Drawer infoDrawer() {
         const Padding(
           padding: EdgeInsets.all(8.0),
           child: Text(
-            "Find and photograph something that embodies today's color. The closer your match, the higher your score. Everyone gets the same color each day, so you can challenge your friends and see who gets the highest score!",
+            "Find and photograph something that embodies today's color. The closer your match, the higher your score. Everyone gets the same color each day, so you can challenge your friends and see who gets the highest score! Click the calendar to see your past results.",
             style: kFontStyleInfoText,
             textAlign: TextAlign.left,
           ),
