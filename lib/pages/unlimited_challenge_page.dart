@@ -71,16 +71,22 @@ class _Unlimited_Challenge_PageState extends State<Unlimited_Challenge_Page> {
                       // random color
                       child: Container(
                         color: randomColor,
-                        height: MediaQuery.sizeOf(context).height / 2,
+                        height: MediaQuery.sizeOf(context).height / 3,
                       ),
                     ),
-                    const Divider(
-                      height: 10,
-                      thickness: 10,
-                      color: Colors.black,
+                    Stack(
+                      alignment: AlignmentDirectional.bottomEnd,
+                      children: [
+                        Divider(
+                          thickness: 10,
+                          height: 10,
+                          color: Colors.black,
+                        ),
+                        timerWidget(context, _countdownValue.toString()),
+                      ],
                     ),
                     Flexible(
-                      flex: 1,
+                      flex: 2,
                       // camera
                       child: CameraPage(
                         todaysColorData: randomColorData,
@@ -90,7 +96,6 @@ class _Unlimited_Challenge_PageState extends State<Unlimited_Challenge_Page> {
                     ),
                   ],
                 ),
-                timerWidget(context, _countdownValue.toString()),
                 AnimatedContainer(
                   height: _animatedHeight,
                   width: double.infinity,

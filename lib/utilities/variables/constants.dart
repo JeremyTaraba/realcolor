@@ -25,15 +25,15 @@ Text kScoreTextPerfect = Text(
   style: TextStyle(
     fontSize: 30,
     fontFamily: "Pacifico",
-    color: Colors.yellow[800],
+    color: Colors.purple[300],
   ),
 );
-const Text kScoreTextSuperb = Text(
+Text kScoreTextSuperb = const Text(
   "Superb!",
   style: TextStyle(
     fontSize: 30,
     fontFamily: "Gluten",
-    color: Colors.red,
+    color: Colors.blue,
     fontWeight: FontWeight.bold,
   ),
 );
@@ -51,7 +51,7 @@ Text kScoreTextOkay = Text(
   style: TextStyle(
     fontSize: 30,
     fontFamily: "JosefinSans",
-    color: Colors.blue[700],
+    color: Colors.orange[700],
     fontWeight: FontWeight.bold,
   ),
 );

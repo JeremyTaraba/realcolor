@@ -6,8 +6,9 @@ class Event {
   List<dynamic> colorRGB;
   final String colorName;
   final int score;
+  List<dynamic> userColorRGB;
 
-  Event({required this.colorRGB, required this.colorName, required this.score});
+  Event({required this.colorRGB, required this.colorName, required this.score, required this.userColorRGB});
 
   @override
   String toString() => colorName;

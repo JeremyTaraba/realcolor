@@ -38,6 +38,11 @@ Widget resultDialog(todaysColorData, BuildContext context, Color usersColor, Str
   }
   return PopScope(
     canPop: false,
+    onPopInvoked: (pop) {
+      Navigator.of(context)
+        ..pop()
+        ..pop();
+    },
     child: AlertDialog.adaptive(
       surfaceTintColor: Colors.transparent,
       backgroundColor: Colors.white,

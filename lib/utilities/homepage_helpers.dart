@@ -58,6 +58,23 @@ Widget challengeButton(String text, context, alert) {
   );
 }
 
+Future<void> getDailyStreakInfo() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  // need to check daily challenge time to see if current streaks lost
+  int? currentStreakPrefs = prefs.getInt('currentStreak');
+  if (currentStreakPrefs != null) {
+    String? temp = prefs.getString('dailyAttemptTime');
+    if (temp != null) {
+      // check if temp is 2 days away
+      DateTime beginningOfToday = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+      DateTime lastSetStreak = DateTime.parse(temp);
+      if (lastSetStreak.isBefore(beginningOfToday.subtract(const Duration(days: 1)))) {
+        prefs.setInt('currentStreak', 0);
+      }
+    }
+  }
+}
+
 Future<String> getDailyChallengeTime() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String? temp = prefs.getString('dailyAttemptTime');

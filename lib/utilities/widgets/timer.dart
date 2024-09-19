@@ -5,18 +5,14 @@ Widget timerWidget(context, time) {
     alignment: Alignment.center,
     child: Container(
       decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Colors.white,
-              Colors.white,
-              // Color.fromRGBO(255, 143, 158, 1),
-              // Color.fromRGBO(255, 188, 143, 1),
-            ],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
+          color: Colors.white,
+          border: Border.all(
+            color: Colors.black,
+            width: 4,
+            strokeAlign: BorderSide.strokeAlignCenter,
           ),
           borderRadius: const BorderRadius.all(
-            Radius.circular(25.0),
+            Radius.circular(10.0),
           ),
           boxShadow: [
             BoxShadow(

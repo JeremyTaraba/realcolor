@@ -24,10 +24,14 @@ class Daily_Challenge_Page extends StatefulWidget {
 
 class _Daily_Challenge_PageState extends State<Daily_Challenge_Page> {
   final countdownValue = ValueNotifier(0);
-  late int _countdownValue; // flutter says this isn't used for some reason
+  late int _countdownValue;
+
+  /// flutter says this isn't used for some reason
   late Duration _duration = const Duration(seconds: 3);
   late Map<String, dynamic> todaysColorData;
-  Timer? _timer; // this is used for timing the container animation
+  Timer? _timer;
+
+  /// this is used for timing the container animation
   double _animatedHeight = 2000;
 
   @override
@@ -97,7 +101,7 @@ class _Daily_Challenge_PageState extends State<Daily_Challenge_Page> {
                       color: Colors.black,
                     ),
                     Flexible(
-                      flex: 1,
+                      flex: 2,
                       // camera
                       child: CameraPage(
                         todaysColorData: todaysColorData,

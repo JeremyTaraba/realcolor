@@ -14,11 +14,9 @@ import 'package:realcolor/utilities/homepage_helpers.dart';
 import '../utilities/variables/globals.dart';
 
 //TODO: add a history to show results for past days (when go into calendar add a streaks at the top)
-//TODO: black bars on camera are really ugly, see if can change color or something
 //TODO: watch an ad if u want to redo the daily
 //TODO: add animations for transitions
-//TODO: make the camera bigger by making the color smaller
-//TODO: in the settings you can change the time for unlimited mode
+//TODO: in the settings you can change the time for unlimited mode (highest level will correspond to the time when changing it)
 //TODO: see if can make the cross hair change color according to what it sees (would need to scan screen for this)
 //TODO: show ad but only if u get a bad score after daily (unlimited shouldn't have ad)
 //TODO: if adding a way to change times to unlimited can also add different streak amount to each that only show when you change the time
@@ -49,6 +47,7 @@ class _Home_PageState extends State<Home_Page> {
     colorListFromJson = data;
     GLOBAL_COLOR_LIST = colorListFromJson;
     dailyChallengeAttemptTime = await getDailyChallengeTime();
+    await getDailyStreakInfo();
     return "done";
   }
 

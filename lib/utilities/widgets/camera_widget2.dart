@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:app_settings/app_settings.dart';
 import 'package:camera/camera.dart';
 import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../challenge_helpers.dart';
@@ -24,6 +26,33 @@ class CameraPage extends StatefulWidget {
 class _CameraPageState extends State<CameraPage> {
   Color crossHair = Colors.red;
 
+  _writeNew() async {
+    final Directory directory = await getApplicationDocumentsDirectory();
+    final File file = File('${directory.path}/daily_results.json');
+    await file.writeAsString("[]", mode: FileMode.write);
+  }
+
+  _writeAppend(String text) async {
+    final Directory directory = await getApplicationDocumentsDirectory();
+    File file = File('${directory.path}/daily_results.json');
+    if (!await file.exists()) {
+      _writeNew();
+      file = File('${directory.path}/daily_results.json');
+    }
+    // read file and edit the existing text, then write editted text to file
+    String fileText = await file.readAsString();
+    String newFileText = "";
+    // need to add text without trailing comma
+    if (fileText == "[]") {
+      newFileText = "[$text]";
+    } else {
+      newFileText = fileText.substring(0, fileText.length - 1);
+      print(newFileText);
+      newFileText += ",$text]";
+    }
+    await file.writeAsString(newFileText, mode: FileMode.write);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,13 +64,13 @@ class _CameraPageState extends State<CameraPage> {
               sensor: Sensor.position(SensorPosition.back),
               aspectRatio: CameraAspectRatios.ratio_1_1,
             ),
-            previewFit: CameraPreviewFit.contain,
+            previewFit: CameraPreviewFit.fitHeight,
             previewAlignment: Alignment.center,
             // Buttons of CameraAwesome UI will use this theme
             theme: AwesomeTheme(
               bottomActionsBackgroundColor: Colors.black54,
               buttonTheme: AwesomeButtonTheme(
-                backgroundColor: Colors.black54,
+                backgroundColor: Colors.grey.withOpacity(0.5),
                 iconSize: 20,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.all(16),
@@ -96,6 +125,31 @@ class _CameraPageState extends State<CameraPage> {
                         await prefs.setString('dailyAttemptTime', DateTime.now().toString());
                         await prefs.setString('savedDailyImgPath', xFile.path);
                         await prefs.setStringList('savedDailyColorRGB', <String>[c.red.toString(), c.green.toString(), c.blue.toString()]);
+
+                        // set daily streaks
+                        int? currentStreakPrefs = prefs.getInt('currentStreak');
+                        if (currentStreakPrefs != null) {
+                          await prefs.setInt('currentStreak', currentStreakPrefs + 1);
+                          currentStreakPrefs = currentStreakPrefs + 1;
+                          int? highestStreakPrefs = prefs.getInt('highestStreak');
+                          if (highestStreakPrefs != null) {
+                            if (highestStreakPrefs < currentStreakPrefs) {
+                              await prefs.setInt('highestStreak', currentStreakPrefs);
+                            }
+                          } else {
+                            await prefs.setInt('highestStreak', currentStreakPrefs);
+                          }
+                        } else {
+                          await prefs.setInt('currentStreak', 1);
+                          await prefs.setInt('highestStreak', 1);
+                        }
+
+                        //set daily results
+                        final List<dynamic> todaysColorRGB = widget.todaysColorData["rgb"];
+                        Color todaysColor = Color.fromRGBO(todaysColorRGB[0], todaysColorRGB[1], todaysColorRGB[2], 1);
+                        int score = (100 - getColorScore(c, todaysColor).toInt());
+                        _writeAppend(
+                            '{"date" : "${DateTime.now().toString()}", "todays_color_rgb": [${todaysColor.red}, ${todaysColor.green}, ${todaysColor.blue}], "todays_color_name": "${widget.todaysColorData["name"]}", "users_color_rgb": [${c.red}, ${c.green}, ${c.blue}], "users_score": $score}');
                       }
                       // stop timer
                       if (widget.timer != null) {
@@ -122,10 +176,6 @@ class _CameraPageState extends State<CameraPage> {
             },
             bottomActionsBuilder: (state) => AwesomeBottomActions(
               state: state,
-              onMediaTap: (mediaCapture) {
-                print("Hi why doesnt it print out here");
-                print(mediaCapture.isPicture);
-              },
               left: AwesomeFlashButton(
                 state: state,
               ),
