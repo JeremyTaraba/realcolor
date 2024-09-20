@@ -1,5 +1,6 @@
 import "dart:io";
 import 'dart:math';
+import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
 import 'package:realcolor/pages/unlimited_challenge_page.dart';
 import 'package:realcolor/utilities/color_detection.dart';
@@ -50,121 +51,116 @@ Widget resultDialog(todaysColorData, BuildContext context, Color usersColor, Str
             children: <Widget>[
               const Text(
                 'Results',
+                textScaler: TextScaler.noScaling,
                 style: kFontStyleHeader1,
                 textAlign: TextAlign.center,
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                        color: isDaily
-                            ? Colors.blueAccent
-                            : score >= 80
-                                ? Colors.green
-                                : Colors.red,
-                        width: 3),
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(15.0),
-                    ),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                      color: isDaily
+                          ? Colors.blueAccent
+                          : score >= 80
+                              ? Colors.green
+                              : Colors.red,
+                      width: 3),
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(15.0),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 3.0),
-                    child: Column(
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text(
+                      isDaily ? DateTime.now().toString().split(' ')[0] : "Unlimited",
+                      style: const TextStyle(fontSize: 20),
+                      textAlign: TextAlign.center,
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: Divider(
+                        thickness: 2,
+                      ),
+                    ),
+                    Text(
+                      isDaily ? "Today's color:" : "Random color",
+                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
+                    Text(
+                      todaysColorData["name"],
+                      style: const TextStyle(fontSize: 20),
+                      textAlign: TextAlign.center,
+                    ),
+                    Container(
+                      height: 30,
+                      width: 30,
+                      color: todaysColor,
+                    ),
+                    Text(
+                      todaysColorData["hex"].toString().toUpperCase(),
+                      textScaler: TextScaler.noScaling,
+                      style: const TextStyle(fontSize: 20),
+                      textAlign: TextAlign.center,
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: Divider(
+                        thickness: 2,
+                      ),
+                    ),
+                    const Text(
+                      "Your Color",
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
+                    Container(
+                      height: 30,
+                      width: 30,
+                      color: usersColor,
+                    ),
+                    Text(
+                      "#${usersColor.value.toRadixString(16).substring(2, 8).toUpperCase()}",
+                      textScaler: TextScaler.noScaling,
+                      style: const TextStyle(fontSize: 20),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(
+                      height: 250,
+                      width: 250,
+                      child: imagePath != ""
+                          ? Image.file(
+                              File(imagePath),
+                            )
+                          : Container(
+                              color: Colors.white,
+                            ),
+                    ),
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Text(
-                          isDaily ? DateTime.now().toString().split(' ')[0] : "Unlimited",
-                          style: const TextStyle(fontSize: 20),
-                          textAlign: TextAlign.center,
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: Divider(
-                            thickness: 2,
-                          ),
-                        ),
-                        Text(
-                          isDaily ? "Today's color:" : "Random color",
-                          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.center,
-                        ),
-                        Text(
-                          todaysColorData["name"],
-                          style: const TextStyle(fontSize: 20),
-                          textAlign: TextAlign.center,
-                        ),
-                        Container(
-                          height: 30,
-                          width: 30,
-                          color: todaysColor,
-                        ),
-                        Text(
-                          todaysColorData["hex"].toString().toUpperCase(),
-                          style: const TextStyle(fontSize: 20),
-                          textAlign: TextAlign.center,
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: Divider(
-                            thickness: 2,
-                          ),
-                        ),
-                        const Text(
-                          "Your Color",
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.center,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: Container(
-                            height: 30,
-                            width: 30,
-                            color: usersColor,
-                          ),
-                        ),
-                        Text(
-                          "#${usersColor.value.toRadixString(16).substring(2, 8).toUpperCase()}",
-                          style: const TextStyle(fontSize: 20),
-                          textAlign: TextAlign.center,
-                        ),
-                        SizedBox(
-                          height: 250,
-                          width: 250,
-                          child: imagePath != ""
-                              ? Image.file(
-                                  File(imagePath),
-                                )
-                              : Container(
-                                  color: Colors.white,
-                                ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 5.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              RichText(
-                                textAlign: TextAlign.center,
-                                textScaler: MediaQuery.of(context).textScaler,
-                                text: TextSpan(
-                                  style: const TextStyle(
-                                    fontSize: 20.0,
-                                    color: Colors.black,
-                                  ),
-                                  children: <TextSpan>[
-                                    const TextSpan(text: "Match: "),
-                                    TextSpan(text: "${score.toString()}%", style: const TextStyle(fontWeight: FontWeight.bold)),
-                                  ],
-                                ),
+                        Expanded(
+                          child: RichText(
+                            textAlign: TextAlign.center,
+                            textScaler: MediaQuery.of(context).textScaler,
+                            text: TextSpan(
+                              style: const TextStyle(
+                                fontSize: 20.0,
+                                color: Colors.black,
                               ),
-                              getScoreText(score),
-                            ],
+                              children: <TextSpan>[
+                                const TextSpan(text: "Match: "),
+                                TextSpan(text: "${score.toString()}%", style: const TextStyle(fontWeight: FontWeight.bold)),
+                              ],
+                            ),
                           ),
+                        ),
+                        Expanded(
+                          child: getScoreText(score),
                         ),
                       ],
                     ),
-                  ),
+                  ],
                 ),
               ),
               isDaily
@@ -181,6 +177,7 @@ Widget resultDialog(todaysColorData, BuildContext context, Color usersColor, Str
                         Text(
                           "Current Streak: $currentStreak",
                           textAlign: TextAlign.center,
+                          textScaler: TextScaler.noScaling,
                           style: const TextStyle(
                             fontSize: 20,
                           ),
@@ -233,6 +230,7 @@ Widget resultDialog(todaysColorData, BuildContext context, Color usersColor, Str
               padding: EdgeInsets.all(8.0),
               child: Text(
                 "Back to Menu",
+                textScaler: TextScaler.noScaling,
                 style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22),
               ),
             ),

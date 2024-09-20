@@ -21,7 +21,7 @@ const TextStyle kFontStyleDaily = TextStyle(
 );
 
 Text kScoreTextPerfect = Text(
-  "Perfect!!",
+  "Perfect!",
   style: TextStyle(
     fontSize: 30,
     fontFamily: "Pacifico",
@@ -40,7 +40,7 @@ Text kScoreTextSuperb = const Text(
 const Text kScoreTextGood = Text(
   "Good",
   style: TextStyle(
-    fontSize: 35,
+    fontSize: 33,
     fontFamily: "Caveat",
     color: Colors.green,
     fontWeight: FontWeight.bold,

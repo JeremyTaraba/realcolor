@@ -13,8 +13,9 @@ class Event {
   final String colorName;
   final int score;
   List<dynamic> userColorRGB;
+  DateTime day;
 
-  Event({required this.colorRGB, required this.colorName, required this.score, required this.userColorRGB});
+  Event({required this.colorRGB, required this.colorName, required this.score, required this.userColorRGB, required this.day});
 
   @override
   String toString() => colorName;
@@ -56,6 +57,7 @@ Future<void> populateCalendarEvents(jsonBody) async {
         colorName: jsonBody[i]["todays_color_name"],
         score: jsonBody[i]["users_score"],
         userColorRGB: jsonBody[i]["users_color_rgb"],
+        day: DateTime.parse(jsonBody[i]["date"]),
       )
     ];
   }
@@ -100,7 +102,7 @@ Widget buildCellDate(DateTime day, Map<DateTime, int> calendarScores, {DateTime?
       color: (day == focusedDay)
           ? boxColor == Colors.white
               ? Colors.grey.shade400
-              : boxColor.withOpacity(0.8)
+              : boxColor.withOpacity(0.9)
           : boxColor,
       borderRadius: (day == focusedDay) ? null : BorderRadius.circular(4),
     ),
@@ -141,8 +143,9 @@ ValueListenableBuilder calendarResultsBuilder(selectedEvents) {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  const Text(
-                    "Results",
+                  Text(
+                    "${value[index].day.month}/${value[index].day.day} Results",
+                    textScaler: TextScaler.noScaling,
                     style: kFontStyleHeader1,
                   ),
                   const Divider(

@@ -104,7 +104,8 @@ class _CameraPageState extends State<CameraPage> {
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       'Zoom: ${(state.sensorConfig.zoom * 100).toStringAsFixed(0)}%',
-                      style: const TextStyle(fontSize: 18, color: Colors.orange),
+                      textScaler: TextScaler.noScaling,
+                      style: const TextStyle(fontSize: 20, color: Colors.orange),
                     ),
                   ),
                 )

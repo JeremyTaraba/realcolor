@@ -25,6 +25,7 @@ Widget timerWidget(context, time) {
       width: MediaQuery.of(context).size.width / 3,
       child: Text(
         time,
+        textScaler: TextScaler.noScaling,
         style: TextStyle(fontSize: 32),
         textAlign: TextAlign.center,
       ),

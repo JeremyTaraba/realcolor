@@ -69,7 +69,7 @@ Drawer infoDrawer() {
         const Padding(
           padding: EdgeInsets.all(8.0),
           child: Text(
-            'Test your speed and precision! You’ll get a random color and just 60 seconds to snap a photo that matches it as closely as possible. Play as many times as you like and race against the clock to find your perfect shot!',
+            'Test your speed and precision! You’ll get a random color and just 60 seconds to snap a photo that matches it. Scores above 80% will start a win streak.',
             style: kFontStyleInfoText,
             textAlign: TextAlign.left,
           ),
@@ -126,6 +126,7 @@ class _settingsDrawerState extends State<settingsDrawer> {
                   ),
                   Text(
                     "Camera Access",
+                    textScaler: TextScaler.noScaling,
                     style: TextStyle(fontSize: 30),
                     textAlign: TextAlign.center,
                   ),
