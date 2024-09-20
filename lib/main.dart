@@ -20,15 +20,7 @@ Future<void> main() async {
   // revenue cat SDK
   await _configureSDK();
 
-// Obtain a list of the available cameras on the device.
-  final cameras = await availableCameras();
-
-// Get a specific camera from the list of available cameras.
-  final firstCamera = cameras.first;
-
-  runApp(MyApp(
-    camera: firstCamera,
-  ));
+  runApp(const MyApp());
 }
 
 Future<void> _configureSDK() async {
@@ -37,17 +29,13 @@ Future<void> _configureSDK() async {
   configuration = PurchasesConfiguration(revenueCatAndroidKey);
   if (configuration != null) {
     await Purchases.configure(configuration);
-    // final paywallResult = await RevenueCatUI.presentPaywallIfNeeded("default");
-    // print('paywall result: $paywallResult');
   }
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({
     super.key,
-    required this.camera,
   });
-  final CameraDescription camera;
 
   // This widget is the root of your application.
   @override
@@ -59,9 +47,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: Home_Page(
-        camera: camera,
-      ),
+      home: const Home_Page(),
     );
   }
 }

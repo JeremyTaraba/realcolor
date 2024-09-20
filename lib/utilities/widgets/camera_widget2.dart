@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:app_settings/app_settings.dart';
 import 'package:camera/camera.dart';
 import 'package:camerawesome/camerawesome_plugin.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -40,15 +40,17 @@ class _CameraPageState extends State<CameraPage> {
       _writeNew();
       file = File('${directory.path}/daily_results.json');
     }
-    // read file and edit the existing text, then write editted text to file
+    // read file and edit the existing text, then write edited text to file
     String fileText = await file.readAsString();
     String newFileText = "";
-    // need to add text without trailing comma
+    // adding text without trailing comma
     if (fileText == "[]") {
       newFileText = "[$text]";
     } else {
       newFileText = fileText.substring(0, fileText.length - 1);
-      print(newFileText);
+      if (kDebugMode) {
+        print(newFileText);
+      }
       newFileText += ",$text]";
     }
     await file.writeAsString(newFileText, mode: FileMode.write);
@@ -102,7 +104,7 @@ class _CameraPageState extends State<CameraPage> {
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       'Zoom: ${(state.sensorConfig.zoom * 100).toStringAsFixed(0)}%',
-                      style: TextStyle(fontSize: 18, color: Colors.orange),
+                      style: const TextStyle(fontSize: 18, color: Colors.orange),
                     ),
                   ),
                 )
@@ -125,7 +127,9 @@ class _CameraPageState extends State<CameraPage> {
                       // set daily sharedPreferences
                       SharedPreferences prefs = await SharedPreferences.getInstance();
                       if (widget.isDaily) {
-                        print("setting daily sharedprefs");
+                        if (kDebugMode) {
+                          print("setting daily sharedprefs");
+                        }
                         await prefs.setString('dailyAttemptTime', DateTime.now().toString());
                         await prefs.setString('savedDailyImgPath', xFile.path);
                         await prefs.setStringList('savedDailyColorRGB', <String>[c.red.toString(), c.green.toString(), c.blue.toString()]);
@@ -155,12 +159,14 @@ class _CameraPageState extends State<CameraPage> {
                         _writeAppend(
                             '{"date" : "${DateTime.now().toString()}", "todays_color_rgb": [${todaysColor.red}, ${todaysColor.green}, ${todaysColor.blue}], "todays_color_name": "${widget.todaysColorData["name"]}", "users_color_rgb": [${c.red}, ${c.green}, ${c.blue}], "users_score": $score}');
                       } else {
-                        // then its unlimited
+                        // its unlimited mode
                         final List<dynamic> todaysColorRGB = widget.todaysColorData["rgb"];
                         Color todaysColor = Color.fromRGBO(todaysColorRGB[0], todaysColorRGB[1], todaysColorRGB[2], 1);
                         int score = (100 - getColorScore(c, todaysColor).toInt());
                         if (score >= 80) {
-                          print("setting unlimited streak");
+                          if (kDebugMode) {
+                            print("setting unlimited streak");
+                          }
                           int? currentUnlimitedStreakPrefs = prefs.getInt('currentUnlimitedStreak');
                           if (currentUnlimitedStreakPrefs != null) {
                             await prefs.setInt('currentUnlimitedStreak', currentUnlimitedStreakPrefs + 1);

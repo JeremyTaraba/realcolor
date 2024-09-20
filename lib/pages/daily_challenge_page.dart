@@ -1,21 +1,18 @@
 import 'dart:async';
-
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:realcolor/utilities/widgets/countdown.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../utilities/challenge_helpers.dart';
 import '../utilities/widgets/camera_widget2.dart';
 
 class Daily_Challenge_Page extends StatefulWidget {
   const Daily_Challenge_Page({
     super.key,
-    required this.camera,
+    // required this.camera,
     required this.colorList,
     required this.dailyChallengeAttempt,
   });
-  final CameraDescription camera;
+  // final CameraDescription camera;
   final List colorList;
   final String dailyChallengeAttempt;
   @override
@@ -24,26 +21,24 @@ class Daily_Challenge_Page extends StatefulWidget {
 
 class _Daily_Challenge_PageState extends State<Daily_Challenge_Page> {
   final countdownValue = ValueNotifier(0);
-  late int _countdownValue;
-
-  /// flutter says this isn't used for some reason
+  late int _countdownValueForAnimation; // flutter says this isn't used for some reason but it is
   late Duration _duration = const Duration(seconds: 3);
   late Map<String, dynamic> todaysColorData;
-  Timer? _timer;
-
-  /// this is used for timing the container animation
+  Timer? _timer; // this is used for timing the container animation
   double _animatedHeight = 2000;
 
   @override
   void initState() {
     super.initState();
-    _countdownValue = _duration.inSeconds;
+    _countdownValueForAnimation = _duration.inSeconds;
     todaysColorData = getTodaysColor(widget.colorList);
     _startTimer();
   }
 
   @override
   void dispose() {
+    _timer?.cancel();
+    countdownValue.dispose();
     super.dispose();
   }
 
@@ -154,7 +149,7 @@ class _Daily_Challenge_PageState extends State<Daily_Challenge_Page> {
       }
       if (_duration.inSeconds > 0) {
         setState(() {
-          _countdownValue = _duration.inSeconds;
+          _countdownValueForAnimation = _duration.inSeconds;
           _duration = _duration - const Duration(seconds: 1);
         });
       }

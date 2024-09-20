@@ -1,6 +1,4 @@
 import 'dart:ui';
-
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math';
@@ -8,17 +6,18 @@ import 'package:realcolor/utilities/variables/background_gradients.dart' as back
 import 'dart:convert';
 import '../utilities/widgets/fancy_container.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:app_settings/app_settings.dart';
 import 'package:realcolor/utilities/homepage_helpers.dart';
 import '../utilities/variables/globals.dart';
+import '../utilities/widgets/home_page_widgets.dart';
 
-//TODO: want to move away from sharedprefs since it has a chance to delete itself on app updates
-//TODO: Will want to refactor soon
+//TODO: Make already big text on screens non resizable
+//TODO: remove the print statements before pushing to app store
+
 //TODO: watch an ad if u want to redo the daily
 //TODO: add animations for transitions
 //TODO: in the settings you can change the time for unlimited mode (highest level will correspond to the time when changing it) Maybe don't put this in settings but put it in the popup for unlimited or do both
 //TODO: if adding a way to change times to unlimited can also add different streak amount to each that only show when you change the time
-//TODO: add an unlimited enhanced mode where you get to pick 3 colors each round to choose from. (could be like rogue like where you get buff like 2x score or less time)
+//TODO: add an enhanced mode where you get to pick 3 colors each round to choose from. (could be like rogue like where you get buff like 2x score or less time)
 
 //TODO: show ad but only if u get a bad score after daily (unlimited shouldn't have ad)
 
@@ -38,26 +37,21 @@ class RandomColorGradientBackground extends StatelessWidget {
 class Home_Page extends StatefulWidget {
   const Home_Page({
     super.key,
-    required this.camera,
   });
-  final CameraDescription camera;
 
   @override
   State<Home_Page> createState() => _Home_PageState();
 }
 
 class _Home_PageState extends State<Home_Page> {
-  late List colorListFromJson;
-  late String dailyChallengeAttemptTime;
-  TextEditingController promoCode = TextEditingController();
+  late List _colorListFromJson;
 
   Future<String> readJson() async {
     final String response = await rootBundle.loadString('assets/colors.json');
     final data = await json.decode(response);
-    colorListFromJson = data;
-    GLOBAL_COLOR_LIST = colorListFromJson;
-    dailyChallengeAttemptTime = await getDailyChallengeTime();
-    await getDailyStreakInfo();
+    _colorListFromJson = data;
+    GLOBAL_COLOR_LIST = _colorListFromJson; // used in challenge_helpers
+    await getDailyStreakInfo(); //resets daily streak if you missed a day
     return "done";
   }
 
@@ -102,7 +96,7 @@ class _Home_PageState extends State<Home_Page> {
                           ),
                           Flexible(
                             flex: 6,
-                            child: Container(
+                            child: SizedBox(
                               height: double.infinity,
                               child: Padding(
                                 padding: const EdgeInsets.all(15.0),
@@ -113,29 +107,13 @@ class _Home_PageState extends State<Home_Page> {
                               ),
                             ),
                           ),
+                          homepageSpacer(),
+                          dailyButton("Daily", context, _colorListFromJson),
                           Flexible(
                             flex: 1,
-                            child: Container(
-                              height: double.infinity,
-                            ),
+                            child: Container(height: double.infinity),
                           ),
-                          dailyButton(
-                            "Daily",
-                            context,
-                            widget.camera,
-                            colorListFromJson,
-                          ),
-                          Flexible(
-                            flex: 1,
-                            child: Container(
-                              height: double.infinity,
-                            ),
-                          ),
-                          unlimitedChallengeButton(
-                            "Unlimited",
-                            context,
-                            colorListFromJson,
-                          ),
+                          unlimitedChallengeButton("Unlimited", context, _colorListFromJson),
                           Flexible(
                             flex: 2,
                             child: Padding(
@@ -180,43 +158,5 @@ class _Home_PageState extends State<Home_Page> {
             );
           }
         });
-  }
-
-  Future<CameraController> initCameraController(camera) async {
-    CameraController controller = CameraController(
-      // Get a specific camera from the list of available cameras.
-      camera,
-      // Define the resolution to use.
-      ResolutionPreset.medium,
-      // dont need audio
-      enableAudio: false,
-    );
-    await controller.initialize().then((_) {
-      if (!mounted) {
-        return;
-      }
-      setState(() {});
-    }).catchError((Object e) {
-      if (e is CameraException) {
-        switch (e.code) {
-          case 'CameraAccessDenied':
-            Navigator.pop(context);
-            break;
-          default:
-            // if they previously denied it then open the settings
-            AppSettings.openAppSettings(type: AppSettingsType.settings, asAnotherTask: true);
-            break;
-        }
-      }
-    });
-    return controller;
-  }
-
-  Drawer setDrawer(int drawerNum) {
-    if (drawerNum == 1) {
-      return infoDrawer();
-    } else {
-      return const Drawer();
-    }
   }
 }

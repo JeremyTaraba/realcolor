@@ -41,7 +41,7 @@ Widget resultDialog(todaysColorData, BuildContext context, Color usersColor, Str
     child: AlertDialog.adaptive(
       surfaceTintColor: Colors.transparent,
       backgroundColor: Colors.white,
-      insetPadding: EdgeInsets.all(25),
+      insetPadding: const EdgeInsets.all(25),
       content: SingleChildScrollView(
         padding: EdgeInsets.zero,
         child: SizedBox(
@@ -75,7 +75,7 @@ Widget resultDialog(todaysColorData, BuildContext context, Color usersColor, Str
                       children: [
                         Text(
                           isDaily ? DateTime.now().toString().split(' ')[0] : "Unlimited",
-                          style: TextStyle(fontSize: 20),
+                          style: const TextStyle(fontSize: 20),
                           textAlign: TextAlign.center,
                         ),
                         const Padding(
@@ -86,7 +86,7 @@ Widget resultDialog(todaysColorData, BuildContext context, Color usersColor, Str
                         ),
                         Text(
                           isDaily ? "Today's color:" : "Random color",
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         ),
                         Text(
@@ -125,7 +125,7 @@ Widget resultDialog(todaysColorData, BuildContext context, Color usersColor, Str
                         ),
                         Text(
                           "#${usersColor.value.toRadixString(16).substring(2, 8).toUpperCase()}",
-                          style: TextStyle(fontSize: 20),
+                          style: const TextStyle(fontSize: 20),
                           textAlign: TextAlign.center,
                         ),
                         SizedBox(

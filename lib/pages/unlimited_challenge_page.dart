@@ -1,12 +1,6 @@
 import 'dart:async';
-
-import 'package:camera/camera.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
 import 'package:realcolor/utilities/widgets/countdown.dart';
-
-import '../utilities/widgets/camera_widget.dart';
 import '../utilities/challenge_helpers.dart';
 import '../utilities/widgets/camera_widget2.dart';
 import '../utilities/widgets/timer.dart';
@@ -45,6 +39,7 @@ class _Unlimited_Challenge_PageState extends State<Unlimited_Challenge_Page> {
   @override
   void dispose() {
     super.dispose();
+    countdownValue.dispose();
     _timer?.cancel();
   }
 
@@ -77,7 +72,7 @@ class _Unlimited_Challenge_PageState extends State<Unlimited_Challenge_Page> {
                     Stack(
                       alignment: AlignmentDirectional.bottomEnd,
                       children: [
-                        Divider(
+                        const Divider(
                           thickness: 10,
                           height: 10,
                           color: Colors.black,
