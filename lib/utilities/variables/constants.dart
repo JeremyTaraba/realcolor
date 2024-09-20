@@ -17,7 +17,7 @@ const TextStyle kFontStyleUnlimited = TextStyle(
 const TextStyle kFontStyleDaily = TextStyle(
   fontFamily: "PermanentMarker",
   fontSize: 48,
-  letterSpacing: 2.0,
+  letterSpacing: 2,
 );
 
 Text kScoreTextPerfect = Text(

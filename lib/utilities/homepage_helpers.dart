@@ -48,7 +48,7 @@ Widget unlimitedChallengeButton(String text, context, colorListFromJson) {
                 color: Colors.black.withOpacity(0.2),
                 spreadRadius: 5,
                 blurRadius: 7,
-                offset: Offset(1, 2),
+                offset: const Offset(1, 2),
               )
             ],
           ),
@@ -143,7 +143,7 @@ Widget dailyButton(text, context, colorListFromJson) {
                         color: Colors.black.withOpacity(0.2),
                         spreadRadius: 5,
                         blurRadius: 7,
-                        offset: Offset(1, 2),
+                        offset: const Offset(1, 2),
                       )
                     ],
                   ),
@@ -151,6 +151,7 @@ Widget dailyButton(text, context, colorListFromJson) {
                     child: Text(
                       text,
                       textScaler: TextScaler.noScaling,
+                      textAlign: TextAlign.left,
                       style: kFontStyleDaily,
                     ),
                   ),
