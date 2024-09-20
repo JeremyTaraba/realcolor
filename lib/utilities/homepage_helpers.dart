@@ -55,6 +55,7 @@ Widget unlimitedChallengeButton(String text, context, colorListFromJson) {
           child: Center(
             child: Text(
               text,
+              textScaler: TextScaler.noScaling,
               textAlign: TextAlign.left,
               style: kFontStyleUnlimited,
             ),
@@ -149,6 +150,7 @@ Widget dailyButton(text, context, colorListFromJson) {
                   child: Center(
                     child: Text(
                       text,
+                      textScaler: TextScaler.noScaling,
                       style: kFontStyleDaily,
                     ),
                   ),
