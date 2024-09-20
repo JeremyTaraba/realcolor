@@ -205,7 +205,7 @@ class _CalendarPageState extends State<CalendarPage> {
         body: Column(
           children: [
             TableCalendar(
-              firstDay: DateTime.utc(2024, 7, 10),
+              firstDay: DateTime.utc(2024, 8, 10),
               lastDay: DateTime.now(),
               focusedDay: _focusedDay,
               calendarFormat: _calendarFormat,

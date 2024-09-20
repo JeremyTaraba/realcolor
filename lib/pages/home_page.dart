@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:realcolor/pages/unlimited_challenge_page.dart';
 import 'dart:math';
 import 'package:realcolor/utilities/variables/background_gradients.dart' as background;
 import 'dart:convert';
@@ -13,13 +12,28 @@ import 'package:app_settings/app_settings.dart';
 import 'package:realcolor/utilities/homepage_helpers.dart';
 import '../utilities/variables/globals.dart';
 
+//TODO: want to move away from sharedprefs since it has a chance to delete itself on app updates
+//TODO: Will want to refactor soon
 //TODO: watch an ad if u want to redo the daily
 //TODO: add animations for transitions
-//TODO: in the settings you can change the time for unlimited mode (highest level will correspond to the time when changing it)
-//TODO: see if can make the cross hair change color according to what it sees (would need to scan screen for this)
-//TODO: show ad but only if u get a bad score after daily (unlimited shouldn't have ad)
+//TODO: in the settings you can change the time for unlimited mode (highest level will correspond to the time when changing it) Maybe don't put this in settings but put it in the popup for unlimited or do both
 //TODO: if adding a way to change times to unlimited can also add different streak amount to each that only show when you change the time
 //TODO: add an unlimited enhanced mode where you get to pick 3 colors each round to choose from. (could be like rogue like where you get buff like 2x score or less time)
+
+//TODO: show ad but only if u get a bad score after daily (unlimited shouldn't have ad)
+
+class RandomColorGradientBackground extends StatelessWidget {
+  RandomColorGradientBackground({super.key});
+  final List<List<Color>> randomColorArray = background.allBackgroundGradients;
+  @override
+  Widget build(BuildContext context) {
+    return FancyContainer(
+      size: Size(MediaQuery.of(context).size.width, MediaQuery.of(context).size.height),
+      cycle: const Duration(seconds: 30),
+      colors: randomColorArray[Random(DateTime.now().minute).nextInt(randomColorArray.length)],
+    );
+  }
+}
 
 class Home_Page extends StatefulWidget {
   const Home_Page({
@@ -33,12 +47,9 @@ class Home_Page extends StatefulWidget {
 }
 
 class _Home_PageState extends State<Home_Page> {
-  final random = Random();
   late List colorListFromJson;
   late String dailyChallengeAttemptTime;
   TextEditingController promoCode = TextEditingController();
-
-  List<List<Color>> randomColorArray = background.allBackgroundGradients;
 
   Future<String> readJson() async {
     final String response = await rootBundle.loadString('assets/colors.json');
@@ -66,13 +77,10 @@ class _Home_PageState extends State<Home_Page> {
           if (snapshot.hasData) {
             return Stack(
               children: [
-                FancyContainer(
-                  size: Size(MediaQuery.of(context).size.width, MediaQuery.of(context).size.height),
-                  cycle: const Duration(seconds: 30),
-                  colors: randomColorArray[random.nextInt(randomColorArray.length)],
-                ),
+                RandomColorGradientBackground(),
                 SafeArea(
                   child: Scaffold(
+                    resizeToAvoidBottomInset: false,
                     drawer: infoDrawer(),
                     endDrawer: const settingsDrawer(),
                     backgroundColor: Colors.transparent,
@@ -86,7 +94,7 @@ class _Home_PageState extends State<Home_Page> {
                               child: Padding(
                                 padding: const EdgeInsets.all(4.0),
                                 child: Stack(children: [
-                                  Opacity(child: Image.asset(appNamePath, color: Colors.black), opacity: 0.5),
+                                  Opacity(opacity: 0.5, child: Image.asset(appNamePath, color: Colors.black)),
                                   ClipRect(child: BackdropFilter(filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 3.0), child: Image.asset(appNamePath)))
                                 ]),
                               ),
@@ -123,15 +131,10 @@ class _Home_PageState extends State<Home_Page> {
                               height: double.infinity,
                             ),
                           ),
-                          challengeButton(
+                          unlimitedChallengeButton(
                             "Unlimited",
                             context,
-                            unlimitedButtonDialog(
-                              context,
-                              Unlimited_Challenge_Page(
-                                colorList: colorListFromJson,
-                              ),
-                            ),
+                            colorListFromJson,
                           ),
                           Flexible(
                             flex: 2,

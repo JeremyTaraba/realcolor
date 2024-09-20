@@ -123,9 +123,9 @@ class _CameraPageState extends State<CameraPage> {
                       Color c = Colors.white;
                       c = await imageToRGB(xFile!);
                       // set daily sharedPreferences
+                      SharedPreferences prefs = await SharedPreferences.getInstance();
                       if (widget.isDaily) {
                         print("setting daily sharedprefs");
-                        SharedPreferences prefs = await SharedPreferences.getInstance();
                         await prefs.setString('dailyAttemptTime', DateTime.now().toString());
                         await prefs.setString('savedDailyImgPath', xFile.path);
                         await prefs.setStringList('savedDailyColorRGB', <String>[c.red.toString(), c.green.toString(), c.blue.toString()]);
@@ -154,18 +154,47 @@ class _CameraPageState extends State<CameraPage> {
                         int score = (100 - getColorScore(c, todaysColor).toInt());
                         _writeAppend(
                             '{"date" : "${DateTime.now().toString()}", "todays_color_rgb": [${todaysColor.red}, ${todaysColor.green}, ${todaysColor.blue}], "todays_color_name": "${widget.todaysColorData["name"]}", "users_color_rgb": [${c.red}, ${c.green}, ${c.blue}], "users_score": $score}');
+                      } else {
+                        // then its unlimited
+                        final List<dynamic> todaysColorRGB = widget.todaysColorData["rgb"];
+                        Color todaysColor = Color.fromRGBO(todaysColorRGB[0], todaysColorRGB[1], todaysColorRGB[2], 1);
+                        int score = (100 - getColorScore(c, todaysColor).toInt());
+                        if (score >= 80) {
+                          print("setting unlimited streak");
+                          int? currentUnlimitedStreakPrefs = prefs.getInt('currentUnlimitedStreak');
+                          if (currentUnlimitedStreakPrefs != null) {
+                            await prefs.setInt('currentUnlimitedStreak', currentUnlimitedStreakPrefs + 1);
+                            currentUnlimitedStreakPrefs = currentUnlimitedStreakPrefs + 1;
+                            int? highestUnlimitedStreakPrefs = prefs.getInt('highestUnlimitedStreak');
+                            if (highestUnlimitedStreakPrefs != null) {
+                              if (highestUnlimitedStreakPrefs < currentUnlimitedStreakPrefs) {
+                                await prefs.setInt('highestUnlimitedStreak', currentUnlimitedStreakPrefs);
+                              }
+                            } else {
+                              await prefs.setInt('highestUnlimitedStreak', currentUnlimitedStreakPrefs);
+                            }
+                          } else {
+                            await prefs.setInt('currentUnlimitedStreak', 1);
+                            await prefs.setInt('highestUnlimitedStreak', 1);
+                          }
+                        } else {
+                          print("resetting streak");
+                          await prefs.setInt('currentUnlimitedStreak', 0);
+                        }
                       }
                       // stop timer
                       if (widget.timer != null) {
                         widget.timer?.cancel();
                       }
-
+                      int? currentUnlimitedStreakPrefs = prefs.getInt('currentUnlimitedStreak');
+                      currentUnlimitedStreakPrefs ??= 0;
                       // If the picture was taken, open dialog box.
                       showDialog<void>(
                         context: context,
                         barrierDismissible: false,
                         builder: (BuildContext context) {
-                          return resultDialog(widget.todaysColorData, context, c, xFile.path, widget.isDaily);
+                          return resultDialog(widget.todaysColorData, context, c, xFile.path, widget.isDaily,
+                              currentStreak: currentUnlimitedStreakPrefs);
                         },
                       );
                     },

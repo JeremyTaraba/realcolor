@@ -1,12 +1,9 @@
 import "dart:io";
 import 'dart:math';
-import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
-import 'package:flutter/scheduler.dart';
 import 'package:realcolor/pages/unlimited_challenge_page.dart';
 import 'package:realcolor/utilities/color_detection.dart';
 import 'package:realcolor/utilities/variables/constants.dart';
-
 import 'variables/globals.dart';
 
 dynamic getTodaysColor(List colorList) {
@@ -31,7 +28,8 @@ int _getTodaysSeed() {
   return seed;
 }
 
-Widget resultDialog(todaysColorData, BuildContext context, Color usersColor, String imagePath, bool isDaily, {bool secondAttempt = false}) {
+Widget resultDialog(todaysColorData, BuildContext context, Color usersColor, String imagePath, bool isDaily,
+    {bool secondAttempt = false, currentStreak = 0}) {
   final List<dynamic> todaysColorRGB = todaysColorData["rgb"];
   Color todaysColor = Color.fromRGBO(todaysColorRGB[0], todaysColorRGB[1], todaysColorRGB[2], 1);
   int score = (100 - getColorScore(usersColor, todaysColor).toInt());
@@ -59,7 +57,13 @@ Widget resultDialog(todaysColorData, BuildContext context, Color usersColor, Str
                 padding: const EdgeInsets.symmetric(vertical: 5.0),
                 child: Container(
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.blueAccent, width: 2),
+                    border: Border.all(
+                        color: isDaily
+                            ? Colors.blueAccent
+                            : score >= 80
+                                ? Colors.green
+                                : Colors.red,
+                        width: 3),
                     borderRadius: const BorderRadius.all(
                       Radius.circular(15.0),
                     ),
@@ -171,19 +175,29 @@ Widget resultDialog(todaysColorData, BuildContext context, Color usersColor, Str
                         fontSize: 20,
                       ),
                     )
-                  : TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        Navigator.of(context)
-                            .pushReplacement(MaterialPageRoute(builder: (context) => Unlimited_Challenge_Page(colorList: GLOBAL_COLOR_LIST)));
-                      },
-                      child: const Text(
-                        "Try again?",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 20,
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text(
+                          "Current Streak: $currentStreak",
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 20,
+                          ),
                         ),
-                      ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            Navigator.of(context)
+                                .pushReplacement(MaterialPageRoute(builder: (context) => Unlimited_Challenge_Page(colorList: GLOBAL_COLOR_LIST)));
+                          },
+                          child: Text(
+                            score >= 80 ? "Continue" : "Try again?",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 20, color: score >= 80 ? Colors.green.shade600 : Colors.blue.shade600),
+                          ),
+                        ),
+                      ],
                     ),
             ],
           ),
@@ -210,9 +224,8 @@ Widget resultDialog(todaysColorData, BuildContext context, Color usersColor, Str
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.2),
-                  spreadRadius: 5,
-                  blurRadius: 7,
-                  offset: const Offset(1, 2),
+                  spreadRadius: 2,
+                  blurRadius: 3,
                 )
               ],
             ),

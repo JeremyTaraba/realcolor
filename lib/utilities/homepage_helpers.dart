@@ -1,3 +1,4 @@
+import "package:another_flushbar/flushbar.dart";
 import "package:app_settings/app_settings.dart";
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
@@ -10,41 +11,50 @@ import "package:realcolor/utilities/variables/constants.dart";
 import "package:shared_preferences/shared_preferences.dart";
 
 import "../pages/daily_challenge_page.dart";
+import "../pages/unlimited_challenge_page.dart";
 
-Widget challengeButton(String text, context, alert) {
+Widget unlimitedChallengeButton(String text, context, colorListFromJson) {
   return Flexible(
     flex: 2,
     child: Padding(
       padding: const EdgeInsets.symmetric(vertical: 15.0),
       child: GestureDetector(
-        onTap: () {
+        onTap: () async {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
           showDialog<void>(
             context: context,
             builder: (BuildContext context) {
-              return alert;
+              return unlimitedButtonDialog(
+                context,
+                Unlimited_Challenge_Page(
+                  colorList: colorListFromJson,
+                ),
+                prefs,
+              );
             },
           );
         },
         child: Container(
           width: MediaQuery.of(context).size.width / 2,
           decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.black,
-                width: 3,
-                strokeAlign: BorderSide.strokeAlignOutside,
-              ),
-              color: Colors.white,
-              borderRadius: const BorderRadius.all(
-                Radius.circular(25.0),
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  spreadRadius: 5,
-                  blurRadius: 7,
-                  offset: Offset(1, 2),
-                )
-              ]),
+            border: Border.all(
+              color: Colors.black,
+              width: 3,
+              strokeAlign: BorderSide.strokeAlignOutside,
+            ),
+            color: Colors.white,
+            borderRadius: const BorderRadius.all(
+              Radius.circular(25.0),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: Offset(1, 2),
+              )
+            ],
+          ),
           child: Center(
             child: Text(
               text,
@@ -181,22 +191,44 @@ var snackBar = SnackBar(
   ),
 );
 
-Widget unlimitedButtonDialog(context, nav) {
+SnackBar snackBarText(String text, Color c) {
+  return SnackBar(
+    backgroundColor: c,
+    content: Text(
+      text,
+      style: kFontStyleSnackbarError,
+    ),
+  );
+}
+
+Widget unlimitedButtonDialog(context, nav, SharedPreferences prefs) {
+  int? currentUnlimitedStreakPrefs = prefs.getInt('currentUnlimitedStreak');
+  currentUnlimitedStreakPrefs ??= 0;
+  int? highestUnlimitedStreakPrefs = prefs.getInt('highestUnlimitedStreak');
+  highestUnlimitedStreakPrefs ??= 0;
   return AlertDialog.adaptive(
     title: const Text(
       'Unlimited',
       style: kFontStyleHeader1,
     ),
-    content: const SingleChildScrollView(
+    content: SingleChildScrollView(
       child: ListBody(
         children: <Widget>[
-          Text(
-            'You can play this challenge as many times as you want\n',
+          const Text(
+            'A 1 minute timer will begin when you start.\n',
+            style: TextStyle(fontSize: 20),
+          ),
+          const Text(
+            'Try to get above 80% for a win streak.\n',
             style: TextStyle(fontSize: 20),
           ),
           Text(
-            'A 1 minute timer will begin when you start.',
-            style: TextStyle(fontSize: 20),
+            'Highest Streak: $highestUnlimitedStreakPrefs',
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          Text(
+            'Current Streak: $currentUnlimitedStreakPrefs',
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ],
       ),
@@ -214,8 +246,8 @@ Widget unlimitedButtonDialog(context, nav) {
       ),
       TextButton(
         child: Text(
-          'Start',
-          style: TextStyle(color: Colors.green[800], fontWeight: FontWeight.bold, fontSize: 20),
+          currentUnlimitedStreakPrefs == 0 ? 'Start' : "Continue",
+          style: TextStyle(color: currentUnlimitedStreakPrefs == 0 ? Colors.green[800] : Colors.blue, fontWeight: FontWeight.bold, fontSize: 20),
         ),
         onPressed: () async {
           SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -380,7 +412,7 @@ class _settingsDrawerState extends State<settingsDrawer> {
   bool validated = false;
   bool submitted = false;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext drawerContext) {
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -400,18 +432,6 @@ class _settingsDrawerState extends State<settingsDrawer> {
               ),
             ),
           ),
-          // Text(
-          //   "Timezone",
-          //   style: TextStyle(fontSize: 30),
-          //   textAlign: TextAlign.center,
-          // ),
-          // settingsDiv,
-          // Text(
-          //   "Color blind",
-          //   style: TextStyle(fontSize: 30),
-          //   textAlign: TextAlign.center,
-          // ),
-          // settingsDiv,
           InkWell(
             onTap: () {},
             child: GestureDetector(
@@ -447,13 +467,14 @@ class _settingsDrawerState extends State<settingsDrawer> {
 
   Widget promoCodeField() {
     return TextFormField(
-      style: TextStyle(fontSize: 18),
+      style: const TextStyle(fontSize: 18),
       onChanged: (text) {
         setState(() {
           submitted = false;
         });
       },
       onFieldSubmitted: (text) async {
+        FocusScope.of(context).unfocus();
         // check if correct or not and show check mark if it is
         // x if it is not, change shared variable for code to have datetime now
         setState(() {
@@ -467,6 +488,15 @@ class _settingsDrawerState extends State<settingsDrawer> {
             DateTime promoTime = DateTime.parse(promoTimeStr);
             if (promoTime.isBefore(DateTime.now().add(const Duration(days: 7)))) {
               // green check
+              // they already entered it once before
+              Future.delayed(
+                  const Duration(milliseconds: 100),
+                  () => Flushbar(
+                        message: "Already applied",
+                        duration: const Duration(seconds: 1, milliseconds: 500),
+                        backgroundColor: Colors.green,
+                      ).show(context));
+
               setState(() {
                 validated = true;
               });
@@ -474,6 +504,14 @@ class _settingsDrawerState extends State<settingsDrawer> {
               // promo expired
               // red x
               print("promo expired"); // uninstall and reinstall will reset this
+              Future.delayed(
+                  const Duration(milliseconds: 100),
+                  () => Flushbar(
+                        message: "Trial expired",
+                        duration: const Duration(seconds: 1, milliseconds: 500),
+                        backgroundColor: Colors.red,
+                      ).show(context));
+
               setState(() {
                 validated = false;
               });
@@ -481,12 +519,30 @@ class _settingsDrawerState extends State<settingsDrawer> {
           } else {
             prefs.setString('promoCodeTime', DateTime.now().toString());
             // green check
+            Future.delayed(
+              const Duration(milliseconds: 100),
+              () => Flushbar(
+                message: "Promo code applied",
+                duration: const Duration(seconds: 1, milliseconds: 500),
+                backgroundColor: Colors.green,
+              ).show(context),
+            );
+
             setState(() {
               validated = true;
             });
           }
         } else {
           // red x
+          Future.delayed(
+            const Duration(milliseconds: 100),
+            () => Flushbar(
+              message: "Invalid code",
+              duration: const Duration(seconds: 1, milliseconds: 500),
+              backgroundColor: Colors.red,
+            ).show(context),
+          );
+
           setState(() {
             validated = false;
           });
