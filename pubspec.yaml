@@ -49,6 +49,7 @@ dependencies:
   purchases_ui_flutter: ^8.1.0
   table_calendar: ^3.1.2
   another_flushbar: ^1.12.30
+  google_mobile_ads: ^5.1.0
 
 dev_dependencies:
   flutter_test:

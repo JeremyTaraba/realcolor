@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../variables/constants.dart';
 
-Widget dropShadowIcon(icon) {
+Widget dropShadowIcon(icon, {size = 40.0}) {
   return Stack(
     children: [
       Positioned(
@@ -13,13 +13,13 @@ Widget dropShadowIcon(icon) {
         child: Icon(
           icon,
           color: Colors.black54,
-          size: 41,
+          size: size + 1,
         ),
       ),
       Icon(
         icon,
         color: Colors.white,
-        size: 40,
+        size: size,
       ),
     ],
   );

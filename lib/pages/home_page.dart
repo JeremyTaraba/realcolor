@@ -10,11 +10,7 @@ import 'package:realcolor/utilities/homepage_helpers.dart';
 import '../utilities/variables/globals.dart';
 import '../utilities/widgets/home_page_widgets.dart';
 
-//TODO: Make already big text on screens non resizable
-//TODO: remove the print statements before pushing to app store
-
 //TODO: watch an ad if u want to redo the daily
-//TODO: add animations for transitions
 //TODO: in the settings you can change the time for unlimited mode (highest level will correspond to the time when changing it) Maybe don't put this in settings but put it in the popup for unlimited or do both
 //TODO: if adding a way to change times to unlimited can also add different streak amount to each that only show when you change the time
 //TODO: add an enhanced mode where you get to pick 3 colors each round to choose from. (could be like rogue like where you get buff like 2x score or less time)

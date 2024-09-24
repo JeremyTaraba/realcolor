@@ -1,8 +1,8 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:realcolor/pages/home_page.dart';
 import 'package:realcolor/utilities/api_keys.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 /* 
 Outside Sources: 
 Color Dataset from: https://www.kaggle.com/datasets/avi1023/color-names
@@ -13,9 +13,8 @@ In-App Purchases: Revenue Cat
 */
 
 Future<void> main() async {
-  // Ensure that plugin services are initialized so that `availableCameras()`
-  // can be called before `runApp()`
   WidgetsFlutterBinding.ensureInitialized();
+  await MobileAds.instance.initialize();
 
   // revenue cat SDK
   await _configureSDK();

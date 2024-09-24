@@ -3,6 +3,7 @@ import "package:flutter/material.dart";
 import "package:purchases_flutter/purchases_flutter.dart";
 import "package:purchases_ui_flutter/purchases_ui_flutter.dart";
 import "package:realcolor/pages/calendar_page.dart";
+import "package:realcolor/utilities/functions/rewarded_ad.dart";
 import "package:realcolor/utilities/variables/constants.dart";
 import "package:realcolor/utilities/widgets/home_page_widgets.dart";
 import "package:shared_preferences/shared_preferences.dart";
@@ -105,7 +106,7 @@ Widget dailyButton(text, context, colorListFromJson) {
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CalendarPage()));
               },
-              child: dropShadowIcon(Icons.calendar_month),
+              child: dropShadowIcon(Icons.calendar_month, size: 60.0),
             ),
           ),
         ),
@@ -234,6 +235,16 @@ Widget unlimitedButtonDialog(context, nav, SharedPreferences prefs) {
         },
       ),
       TextButton(
+        child: const Text(
+          'Watch ad',
+          style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 20),
+        ),
+        onPressed: () async {
+          await loadAd();
+          await showAd();
+        },
+      ),
+      TextButton(
         child: Text(
           currentUnlimitedStreakPrefs == 0 ? 'Start' : "Continue",
           style: TextStyle(color: currentUnlimitedStreakPrefs == 0 ? Colors.green[800] : Colors.blue, fontWeight: FontWeight.bold, fontSize: 20),
@@ -243,12 +254,16 @@ Widget unlimitedButtonDialog(context, nav, SharedPreferences prefs) {
           String? promoTimeStr = prefs.getString('promoCodeTime');
 
           if (promoTimeStr != null) {
-            DateTime promoTime = DateTime.parse(promoTimeStr);
-            if (promoTime.isBefore(DateTime.now().add(const Duration(days: 7)))) {
+            DateTime promoTime = DateTime.parse(promoTimeStr).subtract(Duration(days: 8));
+            print(promoTime.toIso8601String());
+            if (promoTime.isAfter(DateTime.now().subtract(const Duration(days: 7)))) {
               // 7 day trial
+              debugPrint("Trial NOT expired");
               await checkCameraPermissionsPushReplace(context, snackBar, nav);
               return;
             }
+            debugPrint("Trial expired");
+
             // trial expired
             // continue
           }

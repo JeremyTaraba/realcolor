@@ -43,59 +43,62 @@ class _CalendarPageState extends State<CalendarPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Column(
-          children: [
-            TableCalendar(
-              firstDay: DateTime.utc(2024, 8, 10),
-              lastDay: DateTime.now(),
-              focusedDay: _focusedDay,
-              calendarFormat: _calendarFormat,
-              rangeSelectionMode: _rangeSelectionMode,
-              headerStyle: const HeaderStyle(formatButtonVisible: false),
-              selectedDayPredicate: (day) {
-                return isSameDay(_selectedDay, day);
-              },
-              calendarBuilders: CalendarBuilders(
-                selectedBuilder: (context, day, focusedDay) => buildCellDate(day, dailyScores, focusedDay: focusedDay),
-                defaultBuilder: (context, day, focusedDay) => buildCellDate(day, dailyScores),
-                todayBuilder: (context, day, focusedDay) => buildCellDate(day, dailyScores),
+    return Container(
+      color: Colors.white,
+      child: SafeArea(
+        child: Scaffold(
+          body: Column(
+            children: [
+              TableCalendar(
+                firstDay: DateTime.utc(2024, 8, 10),
+                lastDay: DateTime.now(),
+                focusedDay: _focusedDay,
+                calendarFormat: _calendarFormat,
+                rangeSelectionMode: _rangeSelectionMode,
+                headerStyle: const HeaderStyle(formatButtonVisible: false),
+                selectedDayPredicate: (day) {
+                  return isSameDay(_selectedDay, day);
+                },
+                calendarBuilders: CalendarBuilders(
+                  selectedBuilder: (context, day, focusedDay) => buildCellDate(day, dailyScores, focusedDay: focusedDay),
+                  defaultBuilder: (context, day, focusedDay) => buildCellDate(day, dailyScores),
+                  todayBuilder: (context, day, focusedDay) => buildCellDate(day, dailyScores),
+                ),
+                onDaySelected: (selectedDay, focusedDay) {
+                  if (!isSameDay(_selectedDay, selectedDay)) {
+                    // Call `setState()` when updating the selected day
+                    setState(() {
+                      _selectedDay = selectedDay;
+                      _focusedDay = focusedDay;
+                    });
+                  }
+                },
+                onPageChanged: (focusedDay) {
+                  _focusedDay = focusedDay;
+                },
               ),
-              onDaySelected: (selectedDay, focusedDay) {
-                if (!isSameDay(_selectedDay, selectedDay)) {
-                  // Call `setState()` when updating the selected day
-                  setState(() {
-                    _selectedDay = selectedDay;
-                    _focusedDay = focusedDay;
-                  });
-                }
-              },
-              onPageChanged: (focusedDay) {
-                _focusedDay = focusedDay;
-              },
-            ),
-            const SizedBox(height: 8.0),
-            Expanded(
-              child: FutureBuilder(
-                  future: _setup(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return calendarResultsBuilder(_selectedEvents);
-                    } else {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                  }),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: streaksContainer(Colors.blue.shade100, "Highest Streak: ", highestStreak),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: streaksContainer(Colors.orange.shade200, "Current Streak: ", currentStreak),
-            ),
-          ],
+              const SizedBox(height: 8.0),
+              Expanded(
+                child: FutureBuilder(
+                    future: _setup(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return calendarResultsBuilder(_selectedEvents);
+                      } else {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                    }),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: streaksContainer(Colors.blue.shade100, "Highest Streak: ", highestStreak),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: streaksContainer(Colors.orange.shade200, "Current Streak: ", currentStreak),
+              ),
+            ],
+          ),
         ),
       ),
     );
